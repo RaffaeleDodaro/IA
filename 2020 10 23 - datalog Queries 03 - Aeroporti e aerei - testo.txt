@@ -1,0 +1,112 @@
+%codiceAereoporto, citta
+aeroporto(n001, milano).
+aeroporto(n002, roma).
+aeroporto(n003, lamezia).
+aeroporto(n004, genova).
+aeroporto(n005, rc).
+aeroporto(n006, torino).
+aeroporto(n007, cagliari).
+aeroporto(n008, parigi).
+aeroporto(n009, berlino).
+aeroporto(n010, toronto).
+aeroporto(n011, newyork).
+
+%volo(Codice,Compagnia,Aeroporto1,Aereporto2,OraPartenza,OraArrivo,Costo)
+volo(v01, alitalia, n001, n002, 10, 11, 115).
+volo(v02, alitalia, n011, n002, 14, 24, 230).
+volo(v03, alitalia, n007, n005, 16, 19, 80).
+volo(v04, alitalia, n005, n004, 07, 10, 160).
+volo(v05, airFrance, n010, n003, 06, 18, 190).
+volo(v06, airFrance, n003, n009, 12, 16, 210).
+volo(v07, airFrance, n008, n007, 19, 21, 230).
+volo(v08, airone, n005, n002, 21, 22, 130).
+volo(v09, airone, n005, n001, 22, 24, 140).
+volo(v10, airone, n010, n008, 11, 23, 170).
+volo(v11, alitalia, n001, n002, 17, 20, 170).
+volo(v12, alitalia, n002, n001, 17, 20, 170).
+volo(v13, alitalia, n003, n001, 17, 20, 170).
+volo(v14, alitalia, n004, n001, 17, 20, 170).
+volo(v15, alitalia, n005, n001, 17, 20, 170).
+volo(v16, alitalia, n006, n001, 17, 20, 170).
+volo(v17, alitalia, n007, n001, 17, 20, 170).
+volo(v18, alitalia, n008, n001, 17, 20, 170).
+volo(v19, alitalia, n009, n001, 17, 20, 170).
+volo(v20, alitalia, n010, n001, 17, 20, 170).
+volo(v21, alitalia, n011, n001, 17, 20, 170).
+
+%nome pass,codice volo
+passeggero(kali, v01).
+passeggero(simo, v02).
+passeggero(mina, v03).
+passeggero(ciccio, v04).
+passeggero(tina, v05).
+passeggero(nik, v06).
+passeggero(giorgio, v08).
+passeggero(laura, v09).
+passeggero(peppe, v07).
+passeggero(stefi, v10).
+passeggero(chiara, v07).
+
+%nome,sesso, eta
+person(chiara, f, 30).
+person(kali, m, 27).
+person(simo, f, 27).
+person(mina, f, 22).
+person(ciccio, m, 53).
+person(tina, f, 61).
+person(nik, m , 40).
+person(peppe, m, 31).
+person(stefi, f, 15).
+person(giorgio, m, 80).
+person(laura, f, 25).
+
+
+
+% i voli su cui si pranza (pranzo: tra le 12 e le 14).
+%voloPranzo(X):-volo(X, _, _, _, P, A, _), P<=14, A>=12.
+
+
+
+
+
+% i voli su cui non si cena (cena: tra le 19 e le 21).
+%checkHourDinner(X):-volo(X,_, _, _, P, A, _),P<=21,A>=19.
+%voloNonSiCena(X):-volo(X,_, _, _, _, _, _), not checkHourDinner(X).
+
+
+
+
+
+% l'aeroporto che apre piu' presto (apertura: in concomitanza col primo volo della giornata).
+%primoVolo(Z):- volo(Z, _, _, _, P, _, _), volo(H, _, _, _, M, _, _), P > M.
+%primoAeroporto(X):- volo(Z, _, X, _, _, _, _), not primoVolo(Z).
+
+
+
+
+
+% l'aeroporto che chiude piu' tardi.
+% ... simile a quello che apre piu' presto
+%ultimoVolo(Z):- volo(Z, _, _, _, P, _, _), volo(H, _, _, _, M, _, _), P < M.
+%ultimoAeroporto(X):- volo(Z, _, X, _, _, _, _), not ultimoVolo(Z).
+
+
+
+
+
+% tutti i passeggeri che vanno da milano a roma entro la mattina (mattina: entro le 13).
+checkVolo(Y) :- volo(X, _, AP, AA, _, O, _), X = Y, AP = n001, AA = n002, O<13.
+passeggeriMIRO(X) :- passeggero(X, Y), checkVolo(Y), Y = X.
+
+
+
+
+% i voli che contengono sia uomini che donne.
+
+% i voli che non contengono nessuna donna.
+
+% tutte le coppie di codici di aeroporti connessi in qualche modo.
+
+% i possibili colpi di fulmine (persone che volano almeno una volta contemporaneamente sullo stesso aereo)
+
+% incontri impossibili (persone che non volano mai assieme)
