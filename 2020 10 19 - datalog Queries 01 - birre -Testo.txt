@@ -1,0 +1,138 @@
+==============================================================================
+Esercizio 1 - Implementare in Datalog le query richeste sullo schema seguente.
+==============================================================================
+
+person(ciccio).
+person(kali).
+person(simo).
+
+seller(joe).
+seller(alan).
+seller(norma).
+
+likes(ciccio,heineken).
+likes(ciccio,bud).
+likes(ciccio,becks).
+likes(kali,bud).
+%likes(kali,ceres).
+likes(kali,becks).
+%likes(simo,heineken).
+likes(simo,bud).
+likes(simo,ceres).
+
+sells(joe,heineken,30).
+sells(joe,bud,15).
+sells(alan,heineken,24).
+sells(alan,ceres,30).
+sells(alan,becks,12).
+sells(norma,heineken,30).
+sells(norma,bud,40).
+sells(norma,ceres,20).
+
+frequents(ciccio,joe).
+frequents(ciccio,norma).
+frequents(kali,alan).
+frequents(kali,norma).
+frequents(simo,joe).
+frequents(simo,alan).
+frequents(simo,norma).
+
+beers(heineken,manufactor1).
+beers(bud,manufactor2).
+beers(ceres,manufactor1).
+beers(becks,manufactor2).
+
+% I produttori delle birre vendute da Joe.
+
+ q1(M)  :-beers(B,M), sells(joe,B,_).
+
+
+
+
+% stasera andiamo da Joe, chi possiamo incontrare?
+ q2(P) :-frequents(P,joe).
+
+
+
+% le birre che piacciono sia a simo che a kali
+
+ q3(B):-likes(simo,B), likes(kali,B).
+
+
+% I possibili incontri che si possono verificare 
+
+
+q4(P1,P2) :- frequents(P1,L), frequents(P2,L), P1!=P2. 
+
+% le birre che piacciono o a ciccio o a kali.
+
+q5(B):-likes(ciccio,B).
+
+q5(B):-likes(kali,B).
+
+% Supponendo che ogni persona conosca tutti quelli che frequentano lo stesso bar, e che si possano facilmente conoscere tutte le persone 
+% conosciute da un conoscente, calcolare quali persone puo' arrivare a 
+% conoscere ciccio. 
+
+possonoConoscersi(P1,P2):-q4(P1,P2).
+possonoConoscersi(P1,P2):-possonoConoscersi(P1,P3), q4(P3,P2), P1!=P2.
+q6(P):-possonoConoscersi(ciccio,P).
+
+q6(P):-q4(ciccio,P).
+q6(P):-q6(Q), q4(Q,P), Q!=ciccio.
+
+% le birre che non sono vendute da norma.
+
+prezzo(10).
+prezzo(20).
+
+vendutedaNorma(B):-sells(norma,B,_).
+q7(B):-beers(B,_), not vendutedaNorma(B).
+
+% Stasera andiamo da Joe, chi non incontreremo stasera
+q8(P):-person(P), not frequents(P,joe).
+
+% le birre vendute da alan che non sono prodotte da manufactor1 e non costano più di 20 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% le birre vendute da alan che non sono prodotte da manufactor1 e non costano più di 10
+
+% il bar in cui la bud costa di più.
+
+% il bar in cui la heineken costa di più.
+
+% Gli incontri che non possono avvenire da joe
