@@ -1,0 +1,62 @@
+% bambini e pastelli
+%
+% Quattro bambini, Caterina, Federico, Cristina e Marcello, hanno fatto dei disegnini
+% all’asilo. Ciascuno di loro ha utilizzato uno strumento differente. I bambini hanno
+% mostrato con orgoglio i loro lavori al resto della classe in un certo ordine. Scrivere
+% un programma DLV che determini l’ordine in cui ciascun bambino ha presentato il proprio
+% disegno e quale strumento ha usato per prepararlo, dati i seguenti indizi:
+% - Marcello, che è stato l’ultimo a mostrare il proprio disegno, non ha usato l’evidenziatore.
+% - Il bambino che ha usato la matita ha mostrato il proprio disegno immediatamente dopo quello
+% che ha utilizzato il pennello.
+% - Caterina non è stata la seconda.
+% - Cristina ha mostrato il proprio disegno due turni dopo quello del bambino che ha usato
+% il pastello.
+
+%bambini(B) => Caterina, Federico, Cristina e Marcello
+%strumento(S) => matita, l’evidenziatore, pennello, pastello
+%turno(T) => 1...4
+
+%in generale, questo tipo di programmi ha un solo risultato
+%lo spazio di ricerca e fatto dalle possibili associazioni
+%tra bambino,strumento e turno e io devo generare tutte le possibili
+%combinazioni
+
+%ES: Caterina, matita, 3 => informazione da generare
+
+bambino(caterina).
+bambino(marcello).
+bambino(cristina).
+bambino(federico).
+
+strumento(matita).
+strumento(pennello).
+strumento(evidenziatore).
+strumento(pastello).
+
+turno(1..4).
+
+%devo capire se devo generare o no un associazione tra B,S e T
+usa(S,B)| notUsa(S,B) :- bambino(B), strumento(S).
+mostra(T,B) | nonMostra(T,B) :- bambino(B),turno(T).
+
+:-mostra(T,B1),mostra(T,B2),B1!=B2.
+:-usa(S,B1),usa(S,B2),B1!=B2.
+
+%Marcello, che è stato l’ultimo a mostrare il proprio disegno, non ha usato l’evidenziatore
+:-mostra(T,marcello),T!=4.
+:-usa(evidenziatore,marcello).
+
+
+
+% - Il bambino che ha usato la matita ha mostrato il proprio disegno immediatamente dopo quello
+% che ha utilizzato il pennello.
+%:- usa(pennello, B1), mostra(T1, B1), usa(matita, B2), mostra(T2, B2), not T2 = T1 + 1.
+
+
+% - Caterina non è stata la seconda.
+:- mostra(T2,caterina).
+
+
+% - Cristina ha mostrato il proprio disegno due turni dopo quello del bambino che ha usato
+% il pastello.
+:-not mostra(T1,cristina), mostra(T2,B),usa(pastello,B), T1 = T2 + 2.
