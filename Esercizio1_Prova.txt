@@ -1,0 +1,129 @@
+color(red).
+color(verde).
+color(ivory).
+color(blue).
+color(yellow).
+
+nationality(japanese).
+nationality(englishman).
+nationality(norwegian).
+nationality(spaniard).
+nationality(russian).
+
+pet(horse).
+pet(zebra).
+pet(fox).
+pet(dog).
+pet(fox).
+pet(snail).
+
+drink(water).
+drink(coffee).
+drink(tea).
+drink(milk).
+drink(orangejuice).
+
+cigarettes(luckystrike).
+cigarettes(winston).
+cigarettes(chesterfields).
+cigarettes(kools).
+cigarettes(parliaments).
+
+nHouse(1..5).
+
+%1The Englishman lives in the RED house.
+%2The Spaniard owns the dog.
+%3The Norwegian lives in the first house on the left.
+%4.Kools are smoked in the YELLOW house.
+%5The man who smokes Chesterfields lives in the house next to the man with the fox.
+%6The Norwegian lives next to the BLUE house.
+%7The Winston smoker owns snails.
+%8The LuckyStrike smoker drinks orange juice.
+%9The Russian drinks tea.
+%10.The Japanese smokes Parliaments.
+%11.Kools are smoked in the house next to the house where the horse is kept.
+%12.Coffee is drunk in the GREEN house.
+%13.The GREEN house is immediately to the right of the IVORY house.
+%14.Milk is drunk in the middle house.
+
+
+
+%    nHouse,cig,nat,col,pet,dri
+houseType(X, C, N, CO, P, D):- nHouse(X), cigarettes(C), nationality(N), color(CO), pet(P), drink(D).
+existsHouse(X) :- houseType(X, _, _, _, _, _).
+samePet(X, Y) :- houseType(X, _, _, _, P1, _), houseType(Y, _, _, _, P2, _), X != Y, P1 = P2.
+samePet(X, Y) :- houseType(X, _, _, _, P1, _), houseType(Y, _, _, _, P2, _), X != Y, P1 = P2 
+samePet(X, Y) :- houseType(X, _, _, _, P1, _), houseType(Y, _, _, _, P2, _), X != Y, P1 = P2 
+samePet(X, Y) :- houseType(X, _, _, _, P1, _), houseType(Y, _, _, _, P2, _), X != Y, P1 = P2 
+samePet(X, Y) :- houseType(X, _, _, _, P1, _), houseType(Y, _, _, _, P2, _), X != Y, P1 = P2 
+samePet(X, Y) :- houseType(X, _, _, _, P1, _), houseType(Y, _, _, _, P2, _), X != Y, P1 = P2 
+
+ 
+
+:- houseType(X, C1, _, _, _, _), houseType(Y, C2, _, _, _, _), X != Y, not C1 != C2.
+:- houseType(X, C1, _, _, _, _), houseType(Y, C2, _, _, _, _), X != Y, C1 == C2.
+
+
+:- houseType(X, _, N1, _, _, _), houseType(Y, _, N2, _, _, _), X != Y, not N1 != N2.
+:- houseType(X, _, _, C1, _, _), houseType(Y, _, _, C2, _, _), X != Y, not C1 != C2.
+:- houseType(X, _, _, _, P1, _), houseType(Y, _, _, _, P2, _), X != Y, not P1 != P2.
+:- houseType(X, _, _, _, _, D1), houseType(Y, _, _, _, _, D2), X != Y, not D1 != D2.
+
+%una casa puo' aver solo un colore...
+otherColor(C, CO):-nHouse(C),color(CO),color(C1),CO!=C1,casaHaColore(C,CO).
+%... e un colore puo' essere associato solo ad una casa
+otherColor2(C,CO):-nHouse(C),color(CO),nHouse(C2),C!=C2, casaHaColore(C,CO).
+casaHaColore(C,CO):-nHouse(C),color(CO).
+
+
+%una casa puo' aver solo una nazione
+otherNation(C, CO):-nHouse(C),nationality(CO),nationality(C1),CO!=C1,casaHaNazione(C,CO).
+%... e una nazione puo' essere associato solo ad una casa
+otherNation2(C,CO):-nHouse(C),nationality(CO),nHouse(C2),C!=C2, casaHaNazione(C,CO).
+casaHaNazione(C,CO):-nHouse(C),nationality(CO).
+
+%una casa puo' aver solo una sigaretta
+otherSigaretta(C, CO):-nHouse(C),cigarettes(CO),cigarettes(C1),CO!=C1,casaHaSigaretta(C,CO).
+%... e una sigaretta puo' essere associato solo ad una casa
+otherSigaretta2(C,CO):-nHouse(C),cigarettes(CO),nHouse(C2),C!=C2, casaHaSigaretta(C,CO).
+casaHaSigaretta(C,CO):-nHouse(C),cigarettes(CO).
+
+%una casa puo' aver solo un animale
+otherPet(C, CO):-nHouse(C),pet(CO),pet(C1),CO!=C1,casaHaPet(C,CO).
+%... e un pet puo' essere associato solo ad una casa
+otherPet2(C,CO):-nHouse(C),pet(CO),nHouse(C2),C!=C2, casaHaPet(C,CO).
+casaHaPet(C,CO):-nHouse(C),pet(CO).
+
+%una casa puo' aver solo un drink
+otherDrink(C, CO):-nHouse(C),drink(CO),drink(C1),CO!=C1,casaHaDrink(C,CO).
+%... e un drink puo' essere associato solo ad una casa
+otherDrink2(C,CO):-nHouse(C),drink(CO),nHouse(C2),C!=C2, casaHaDrink(C,CO).
+casaHaDrink(C,CO):-nHouse(C),drink(CO).
+
+
+
+
+
+%1The Englishman lives in the RED house.
+:-nHouse(C), casaHaNazione(C,englishman), casaHaColore(C,red).
+
+%2
+:-nHouse(C), casaHaNazione(C,spaniard), casaHaPet(C,dog).
+
+
+
+:- houseType(_, _, englishman, red, _, _). %1
+
+:- houseType(_, _, spaniard, _, dog, _). %2
+:- houseType(1, _, norwegian, _, _, _). %3 
+:- houseType(_, kools, _, yellow, _, _). %4
+:- houseType(X, chesterfields, _, _, _, _),  houseType(Y, _, _, _, fox, _), X = Y + 1, X = Y - 1. %5
+:- houseType(X, _, norwegian, _, _, _), houseType(Y, _, _, blue, _, _), X = Y + 1,  X = Y - 1.%6
+:- houseType(_, winston, _, _, snail, _).%7
+:- houseType(_, luckystrike, _, _, _, orangejuice).%8
+:- houseType(_, _, russian, _, _, tea).%9
+:- houseType(_, parliaments, japanese, _, _, _).%10
+:- houseType(X, kools, _, _, _, _), houseType(Y, _, _, _, horse, _),  X = Y + 1,  X = Y - 1.%11
+:- houseType(_, _, _, green, _, coffee).%12
+%:- houseType(X, _, _, green, _, _), houseType(Y, _, _, ivory, _, _), not X = Y + 1. %13
+:- houseType(3, _, _, _, _, milk).%14

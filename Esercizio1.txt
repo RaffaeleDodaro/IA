@@ -1,0 +1,69 @@
+color(red). color(verde). color(ivory).color(blue). color(yellow).
+
+nationality(japanese).nationality(englishman).nationality(norwegian).nationality(spaniard).nationality(russian).
+
+pet(horse). pet(zebra).pet(fox).pet(dog).pet(snail).
+
+drink(water).drink(coffee).drink(tea).drink(milk).drink(orangejuice).
+
+cigarettes(luckystrike).cigarettes(winston).cigarettes(chesterfields).cigarettes(kools).cigarettes(parliaments).
+
+nHouse(1..5).
+
+houseColor(H,red)|houseColor(H,blue)|houseColor(H,yellow)|houseColor(H,green)|houseColor(H,ivory) :- nHouse(H).
+:-houseColor(H1,C),houseColor(H2,C),H1!=H2.
+
+houseNationality(H,japanese)|houseNationality(H,englishman)|houseNationality(H,norwegian)|houseNationality(H,russian)|houseNationality(H,spaniard) :- nHouse(H).
+:-houseNationality(H1,N),houseNationality(H2,N),H1!=H2.
+
+housePet(H,horse)|housePet(H,zebra)|housePet(H,fox)|housePet(H,dog)|housePet(H,snail) :- nHouse(H).
+:-housePet(H1,P),housePet(H2,P),H1!=H2.
+
+houseDrink(H,water)|houseDrink(H,coffee)|houseDrink(H,tea)|houseDrink(H,milk)|houseDrink(H,orangejuice) :- nHouse(H).
+:-houseDrink(H1,D),houseDrink(H2,D),H1!=H2.
+
+houseCigarettes(H,luckystrike)|houseCigarettes(H,winston)|houseCigarettes(H,chesterfields)|houseCigarettes(H,kools)|houseCigarettes(H,parliaments) :- nHouse(H).
+:-houseCigarettes(H1,C),houseCigarettes(H2,C),H1!=H2.
+
+%1The Englishman lives in the RED house.
+:-houseNationality(H,englishman),houseColor(H,C),C!=red.
+
+%2The Spaniard owns the dog.
+:-houseNationality(H,spaniard),housePet(H,P),P!=dog.
+
+%3The Norwegian lives in the first house on the left.
+houseNationality(1,norwegian).
+
+%4.Kools are smoked in the YELLOW house.
+:-houseCigarettes(H,kools),houseColor(H,C),C!=yellow.
+
+%5The man who smokes Chesterfields lives in the house next to the man with the fox.
+houseCigarettes(H2 + 1, chesterfields) | houseCigarettes(H2 - 1, chesterfields) :- housePet(H2, fox).
+
+%6The Norwegian lives next to the BLUE house.
+:-houseNationality(H,norwegian),houseColor(H1,blue),H=H1+1.
+:-houseNationality(H,norwegian),houseColor(H1,blue),H=H1-1.
+
+%7The Winston smoker owns snails.
+:-houseCigarettes(H,winston),housePet(H,P),P!=snail.
+
+%8The LuckyStrike smoker drinks orange juice.
+:-houseCigarettes(H,luckystrike),houseDrink(H,D),D!=orangejuice.
+
+%9The Russian drinks tea.
+:-houseNationality(H,russian),houseDrink(H,D),D!=tea.
+
+%10.The Japanese smokes Parliaments.
+:-houseNationality(H,japanese),houseCigarettes(H,C),C!=parliaments.
+
+%11.Kools are smoked in the house next to the house where the horse is kept.
+houseCigarettes(H2 + 1, kools) | houseCigarettes(H2 - 1, kools) :- housePet(H2, horse).
+
+%12.Coffee is drunk in the GREEN house.
+:-houseColor(H,C),houseDrink(H,coffee),C!=green.
+
+%13.The GREEN house is immediately to the right of the IVORY house.
+:-houseColor(H,green),houseColor(H1,ivory),H!=H1+1.
+
+%14.Milk is drunk in the middle house.
+:-houseDrink(H,milk),H!=3.
