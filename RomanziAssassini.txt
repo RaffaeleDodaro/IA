@@ -1,0 +1,123 @@
+% == == == == == == == == == == == == == == == == == == == == == == == == == == == 
+% ROMANZI E ASSASSINI
+% 5 scrittori hanno pubblicato i loro nuovi romanzi gialli. Un appassionato li ha 
+% letti, e vuole rovinarvi la sorpresa facendovi indovinare i finali di ciascuno. 
+% I 5 assassini (1 per romanzo) sono: maggiordomo, artista, dentista, idraulico, 
+% avvocato. I 5 luoghi (1 per romanzo) sono: Roma, Milano, Falerna, Napoli, 
+% Lamezia Terme. Le 5 vittime (1 per romanzo) sono: cugino, amico, madre, partner, 
+% sorella. I 5 moventi (1 per romanzo) sono: ricatto, eredità, amore, potere, 
+% vendetta. Dovete quindi ricostruire i finali (cioè quale assassino ha ucciso 
+% quale vittima, dove lo ha fatto e quale era il movente). Gli indizi che vi 
+% fornisce sono i seguenti:
+
+% 1. Né il maggiordomo, né l’idraulico hanno ucciso a Roma. 
+% 
+% 2. L’omicidio avvenuto a Roma aveva come movente l’eredità. 
+% 
+% 3. L’omicidio avvenuto per vendetta non è stato perpetrato né a Falerna né a 
+% Milano. L’artista non ha ucciso il partner (il quale a sua volta non è stato 
+% ucciso né per vendetta né per potere). 
+% 
+% 4. Il dentista ha ucciso un cugino a Lamezia Terme, ma non per vendetta, né per 
+% amore. 
+% 
+% 5. La sorella non è stata uccisa a Roma, né a Falerna; e la vittima di Falerna 
+% non è stata uccisa per amore. Il maggiordomo non ha ucciso la partner. 
+% 
+% 6. Nel romanzo in cui l’assassino è l’avvocato il  movente è il potere, ma la 
+% vittima non è un amico.
+
+scrittore(1..5).
+
+                    %1 assassino per ogni romanzo.
+
+assassino(maggiordomo). assassino(artista). assassino(dentista). assassino(idraulico). assassino(avvocato).
+
+                    %1 luogo per ogni romanzo.
+
+luogo(roma). luogo(milano). luogo(falerna). luogo(napoli). luogo(lameziaterme).
+
+                    %1 vittima per ogni romanzo
+
+vittima(cugino). vittima(amico). vittima(madre). vittima(partner). vittima(sorella).
+
+                    %1 movente per ogni romanzo
+
+movente(ricatto). movente(eredita). movente(amore). movente(potere). movente(vendetta).
+
+scrittoreAssassino(1,A)|scrittoreAssassino(2,A)|scrittoreAssassino(3,A)|scrittoreAssassino(4,A)|scrittoreAssassino(5,A) :- assassino(A).
+
+scrittoreLuogo(1,L)|scrittoreLuogo(2,L)|scrittoreLuogo(3,L)|scrittoreLuogo(4,L)|scrittoreLuogo(5,L) :- luogo(L).
+
+scrittoreVittima(1,V)|scrittoreVittima(2,V)|scrittoreVittima(3,V)|scrittoreVittima(4,V)|scrittoreVittima(5,V) :- vittima(V).
+
+scrittoreMovente(1,M)|scrittoreMovente(2,M)|scrittoreMovente(3,M)|scrittoreMovente(4,M)|scrittoreMovente(5,M) :- movente(M).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    %1 assassino per ogni romanzo.
+
+:-scrittoreAssassino(X,A),scrittoreAssassino(Y,A),X!=Y.
+:-scrittoreAssassino(A,X),scrittoreAssassino(A,Y),X!=Y.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    %1 luogo per ogni romanzo.
+
+:-scrittoreLuogo(X,A),scrittoreLuogo(Y,A),X!=Y.
+:-scrittoreLuogo(A,X),scrittoreLuogo(A,Y),X!=Y.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    %1 vittima per ogni romanzo.
+
+:-scrittoreVittima(X,A),scrittoreVittima(Y,A),X!=Y.
+:-scrittoreVittima(A,X),scrittoreVittima(A,Y),X!=Y.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    %1 movente per ogni romanzo.
+
+:-scrittoreMovente(X,M),scrittoreMovente(Y,M),X!=Y.
+:-scrittoreMovente(S,X),scrittoreMovente(S,Y),X!=Y.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%1. Né il maggiordomo, né l’idraulico hanno ucciso a Roma.
+:-scrittoreAssassino(A,maggiordomo),scrittoreLuogo(a,roma).
+:-scrittoreAssassino(A,idraulico),scrittoreLuogo(a,roma).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 2. L’omicidio avvenuto a Roma aveva come movente l’eredità. 
+:-scrittoreLuogo(S,roma), scrittoreMovente(S,M), M != eredita.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 3. L’omicidio avvenuto per vendetta non è stato perpetrato né a Falerna né a 
+% Milano. L’artista non ha ucciso il partner (il quale a sua volta non è stato 
+% ucciso né per vendetta né per potere). 
+:-scrittoreMovente(S,vendetta),scrittoreLuogo(S,L),L==falerna.
+:-scrittoreMovente(S,vendetta),scrittoreLuogo(S,L),L==milano.
+:-scrittoreAssassino(S,artista),scrittoreVittima(S,V),V==partner.
+:-scrittoreVittima(S,partner),scrittoreMovente(S,M),M==vendetta.
+:-scrittoreVittima(S,partner),scrittoreMovente(S,M),M==potere.
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 4. Il dentista ha ucciso un cugino a Lamezia Terme, ma non per vendetta, né per 
+% amore. 
+:-scrittoreAssassino(S,A),scrittoreVittima(S,V),scrittoreMovente(A,M),scrittoreLuogo(A,L) ,M==vendetta, A!=dentista,V!=cugino,L!=lameziaterme.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 5. La sorella non è stata uccisa a Roma, né a Falerna; e la vittima di Falerna 
+% non è stata uccisa per amore. Il maggiordomo non ha ucciso la partner. 
+:-scrittoreVittima(A,V), scrittoreLuogo(A,L), V==sorella, L==roma.
+:-scrittoreVittima(A,V), scrittoreLuogo(A,L), V==sorella, L==falerna.
+:-scrittoreLuogo(A,L),scrittoreMovente(A,amore),L==falerna.
+:-scrittoreAssassino(A,maggiordomo),scrittoreVittima(partner).
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 6. Nel romanzo in cui l’assassino è l’avvocato il  movente è il potere, ma la 
+% vittima non è un amico.
+:-scrittoreAssassino(S,A),scrittoreMovente(S,M),scrittoreVittima(A,amico), M!=potere, A!=avvocato.
