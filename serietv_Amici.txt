@@ -1,0 +1,84 @@
+% Esercizio 2. 
+% Quattro amici, nonostante generalmente vadano molto d’accordo, hanno gusti 
+% completamente diversi riguardo i programmi televisivi preferiti. Infatti, 
+% ognuno di loro ha come suo programma preferito un programma diverso da 
+% quello degli altri tre amici. Inoltre tali programmi vengono tutti 
+% trasmessi in giorni ed orari tra loro differenti.  Scrivere un programma 
+% DLV che, utilizzando gli indizi seguenti, individui per ogni amico: il titolo 
+% del suo programma preferito, il giorno della settimana e l’orario in cui 
+% viene trasmesso.
+
+
+
+
+amico(alberto). amico(giorgio). amico(michele). amico(roberto).
+programma(csi). programma(stranamore). programma(ulisse). programma(xfactor).
+giorno(domenica). giorno(lunedi). giorno(martedi). giorno(mercoledi).
+orario(7). orario(8). orario(9). orario(10).  
+
+%amico guarda serie
+amicoProgramma(A,csi)|amicoProgramma(A,stranamore)|amicoProgramma(A,ulisse)|amicoProgramma(A,xfactor):-amico(A).
+
+
+amicoGiorno(A,domenica)|amicoGiorno(A,lunedi)|amicoGiorno(A,martedi)|amicoGiorno(A,mercoledi):-amico(A).
+
+
+amicoOrario(A,7)|amicoOrario(A,8)|amicoOrario(A,9)|amicoOrario(A,10):-amico(A).
+
+
+%non e possibile che un amico guarda due serie
+:-amicoProgramma(A, P1),amicoProgramma(A, P2), P1!=P2.
+
+
+%non e possibile che una serie e guardata da due amici
+:-amicoProgramma(A1, P),amicoProgramma(A2, P), A1!=A2.
+
+
+%non e possibile che due amici guardano le serie lo stesso giorno
+:-amicoGiorno(A1,G),amicoGiorno(A2,G), A1!=A2.
+
+
+%non e possibile che due amici guardano le serie la stessa ora
+:-amicoOrario(A1,O),amicoOrario(A2,O), A1!=A2.
+
+
+
+% 1.	La serie “CSI” non viene trasmessa di domenica.
+:-amicoProgramma(A,csi), amicoGiorno(A,domenica).
+
+
+% 2.	Il programma “Ulisse”, trasmesso alle 7 di sera, non è quello preferito da Michele.
+%       (divido  la richiesta in  due) non e possibile che ulisse viene trasmesso alle 7...
+:-amicoProgramma(A,ulisse), amicoOrario(A, O), O!=7.
+%... non e possibile che a michele piace ulisse che e trasmesso alle 7
+:-amicoProgramma(michele,ulisse).
+
+
+
+% 3.	“Stranamore” non è il programma preferito di Alberto.
+:-amicoProgramma(alberto,stranamore).
+
+
+% 4.	Il programma preferito di Roberto viene trasmesso alle 10 di sera
+%         ma non di mercoledì.
+:-amicoProgramma(roberto,P), amicoOrario(roberto,O), amicoGiorno(roberto,mercoledi), O!=10.
+
+
+
+% 5.	Il programma trasmesso martedì sera è “XFactor”.
+:-amicoProgramma(A,P),amicoGiorno(A,martedi), P!=xfactor.
+
+
+
+% 6.	Michele non guarda mai la televisione alle 9 di sera, 
+%        mentre Giorgio non la guarda mai di domenica.
+:-amicoProgramma(michele,P), amicoOrario(michele,9).
+:-amicoProgramma(giorgio,P), amicoGiorno(giorgio,domenica).
+
+
+% 7.	“Stranamore” viene trasmesso un’ora dopo rispetto all’orario di inizio
+%       del programma preferito di Giorgio, ma un’ora prima rispetto al programma
+%       trasmesso di lunedì.
+:-amicoProgramma(A,stranamore),amicoOrario(A,O), amicoProgramma(giorgio,P),
+ amicoOrario(giorgio, OO), P==stranamore,O==(OO+1),A==giorgio,
+ amicoProgramma(A1,P),amicoGiorno(A1,lunedi),amicoOrario(A1,O1), O==(O1-1),A1==giorgio.
