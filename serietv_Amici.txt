@@ -1,84 +1,68 @@
-% Esercizio 2. 
-% Quattro amici, nonostante generalmente vadano molto d’accordo, hanno gusti 
-% completamente diversi riguardo i programmi televisivi preferiti. Infatti, 
-% ognuno di loro ha come suo programma preferito un programma diverso da 
-% quello degli altri tre amici. Inoltre tali programmi vengono tutti 
-% trasmessi in giorni ed orari tra loro differenti.  Scrivere un programma 
-% DLV che, utilizzando gli indizi seguenti, individui per ogni amico: il titolo 
-% del suo programma preferito, il giorno della settimana e l’orario in cui 
-% viene trasmesso.
+amico(alberto).  amico(giorgio).  amico(michele).  amico(roberto).
+programma(csi).  programma(stranamore).  programma(ulisse).  programma(xfactor).
+giorno(domenica).  giorno(lunedi).  giorno(martedi).  giorno(mercoledi).
+orario(7).  orario(8).  orario(9).  orario(10). 
 
 
 
-
-amico(alberto). amico(giorgio). amico(michele). amico(roberto).
-programma(csi). programma(stranamore). programma(ulisse). programma(xfactor).
-giorno(domenica). giorno(lunedi). giorno(martedi). giorno(mercoledi).
-orario(7). orario(8). orario(9). orario(10).  
-
-%amico guarda serie
-amicoProgramma(A,csi)|amicoProgramma(A,stranamore)|amicoProgramma(A,ulisse)|amicoProgramma(A,xfactor):-amico(A).
+piace(alberto, P) | piace(giorgio, P) | piace(michele, P) | piace(roberto, P) :-  programma(P).
+trasmessoAlle(P, 7) | trasmessoAlle(P, 8)| trasmessoAlle(P, 9) | trasmessoAlle(P, 10)  :-  programma(P).
+trasmessoDi(P,domenica) | trasmessoDi(P, lunedi) | trasmessoDi(P, martedi) | trasmessoDi(P, mercoledi) :- programma(P).
 
 
-amicoGiorno(A,domenica)|amicoGiorno(A,lunedi)|amicoGiorno(A,martedi)|amicoGiorno(A,mercoledi):-amico(A).
-
-
-amicoOrario(A,7)|amicoOrario(A,8)|amicoOrario(A,9)|amicoOrario(A,10):-amico(A).
-
-
-%non e possibile che un amico guarda due serie
-:-amicoProgramma(A, P1),amicoProgramma(A, P2), P1!=P2.
-
-
-%non e possibile che una serie e guardata da due amici
-:-amicoProgramma(A1, P),amicoProgramma(A2, P), A1!=A2.
-
-
-%non e possibile che due amici guardano le serie lo stesso giorno
-:-amicoGiorno(A1,G),amicoGiorno(A2,G), A1!=A2.
-
-
-%non e possibile che due amici guardano le serie la stessa ora
-:-amicoOrario(A1,O),amicoOrario(A2,O), A1!=A2.
+:- programma(P), #count {A : piace(A,P)} != 1.
+:- amico(A), #count {P : piace(A,P)} != 1.
 
 
 
-% 1.	La serie “CSI” non viene trasmessa di domenica.
-:-amicoProgramma(A,csi), amicoGiorno(A,domenica).
+:- programma(P), #count {O : trasmessoAlle(P,O)} != 1.
+:- orario(O), #count {P : trasmessoAlle(P,O)} != 1.
+
+ 
+
+:- programma(P), #count {G : trasmessoDi(P,G)} != 1.
+:- giorno(G), #count {P : trasmessoDi(P,G)} != 1.
+
+ 
+
+% 1. la serie “csi” non viene trasmessa di domenica.
+:- trasmessoDi(csi, X),  X=domenica.
 
 
-% 2.	Il programma “Ulisse”, trasmesso alle 7 di sera, non è quello preferito da Michele.
-%       (divido  la richiesta in  due) non e possibile che ulisse viene trasmesso alle 7...
-:-amicoProgramma(A,ulisse), amicoOrario(A, O), O!=7.
-%... non e possibile che a michele piace ulisse che e trasmesso alle 7
-:-amicoProgramma(michele,ulisse).
+% 2.    il programma “ulisse”, trasmesso alle 7 di sera, non è quello preferito da michele.
+:- trasmessoAlle(ulisse, X), X != 7.
+:- piace(michele, X), X = ulisse.
 
+ 
 
+% 3. “stranamore” non è il programma preferito di alberto.
+:- piace(alberto, stranamore).
 
-% 3.	“Stranamore” non è il programma preferito di Alberto.
-:-amicoProgramma(alberto,stranamore).
+ 
 
+% 4.    il programma preferito di roberto viene trasmesso alle 10 di sera ma non di mercoledì.
+:- piace(roberto, X), trasmessoAlle(X, Y),Y!=10, trasmessoDi(X, Z),Z=mercoledi.
 
-% 4.	Il programma preferito di Roberto viene trasmesso alle 10 di sera
-%         ma non di mercoledì.
-:-amicoProgramma(roberto,P), amicoOrario(roberto,O), amicoGiorno(roberto,mercoledi), O!=10.
+ 
 
+% 5.    il programma trasmesso martedì sera è “Xfactor”.
+:- trasmessoDi(X, martedi), X!= xfactor.
 
+ 
 
-% 5.	Il programma trasmesso martedì sera è “XFactor”.
-:-amicoProgramma(A,P),amicoGiorno(A,martedi), P!=xfactor.
+% 6.    michele non guarda mai la televisione alle 9 di sera, mentre giorgio non la guarda mai di domenica.
+:- piace(michele, X), trasmessoAlle(X, 9).
+:- piace(giorgio, X), trasmessoDi(X, domenica).
 
-
-
-% 6.	Michele non guarda mai la televisione alle 9 di sera, 
-%        mentre Giorgio non la guarda mai di domenica.
-:-amicoProgramma(michele,P), amicoOrario(michele,9).
-:-amicoProgramma(giorgio,P), amicoGiorno(giorgio,domenica).
 
 
 % 7.	“Stranamore” viene trasmesso un’ora dopo rispetto all’orario di inizio
 %       del programma preferito di Giorgio, ma un’ora prima rispetto al programma
 %       trasmesso di lunedì.
-:-amicoProgramma(A,stranamore),amicoOrario(A,O), amicoProgramma(giorgio,P),
- amicoOrario(giorgio, OO), P==stranamore,O==(OO+1),A==giorgio,
- amicoProgramma(A1,P),amicoGiorno(A1,lunedi),amicoOrario(A1,O1), O==(O1-1),A1==giorgio.
+ :-trasmessoDi(stranamore,lunedi).
+ :-piace(B,P),B=giorgio,P=stranamore.
+ :-piace(giorgio,P),trasmessoDi(P,G),G=lunedi.
+ 
+ :- trasmessoAlle(stranamore,O), trasmessoAlle(P, K),piace(giorgio,P),trasmessoDi(P,G),G=lunedi, O!=(K+1).
+ 
+ :- trasmessoAlle(stranamore,O),trasmessoAlle(P, K),trasmessoDi(P,lunedi),O!=K-1.
