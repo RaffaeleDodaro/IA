@@ -1,37 +1,25 @@
-amico(alberto).  amico(giorgio).  amico(michele).  amico(roberto).
-programma(csi).  programma(stranamore).  programma(ulisse).  programma(xfactor).
-giorno(domenica).  giorno(lunedi).  giorno(martedi).  giorno(mercoledi).
-orario(7).  orario(8).  orario(9).  orario(10). 
-
-
-
-piace(alberto, P) | piace(giorgio, P) | piace(michele, P) | piace(roberto, P) :-  programma(P).
-trasmessoAlle(P, 7) | trasmessoAlle(P, 8)| trasmessoAlle(P, 9) | trasmessoAlle(P, 10)  :-  programma(P).
+piace(alberto, P) | piace(giorgio, P) | piace(michele, P) | piace(roberto, P) :- programma(P).
+trasmessoAlle(P, 7) | trasmessoAlle(P, 8)| trasmessoAlle(P, 9) | trasmessoAlle(P, 10) :- programma(P).
 trasmessoDi(P,domenica) | trasmessoDi(P, lunedi) | trasmessoDi(P, martedi) | trasmessoDi(P, mercoledi) :- programma(P).
 
-
-:- programma(P), #count {A : piace(A,P)} != 1.
-:- amico(A), #count {P : piace(A,P)} != 1.
-
-
-
-:- programma(P), #count {O : trasmessoAlle(P,O)} != 1.
+:- amico(A), #count {P : piace(A,P)}!= 1.
 :- orario(O), #count {P : trasmessoAlle(P,O)} != 1.
+:- giorno(G), #count {P : trasmessoDi(P,G)}!= 1.
 
  
 
-:- programma(P), #count {G : trasmessoDi(P,G)} != 1.
-:- giorno(G), #count {P : trasmessoDi(P,G)} != 1.
-
- 
 
 % 1. la serie “csi” non viene trasmessa di domenica.
-:- trasmessoDi(csi, X),  X=domenica.
+:- trasmessoDi(csi, X), X=domenica.
+
+ 
 
 
-% 2.    il programma “ulisse”, trasmesso alle 7 di sera, non è quello preferito da michele.
+% 2.il programma “ulisse”, trasmesso alle 7 di sera, non è quello preferito da michele.
 :- trasmessoAlle(ulisse, X), X != 7.
-:- piace(michele, X), X = ulisse.
+:- piace(michele, ulisse).
+
+ 
 
  
 
@@ -40,29 +28,28 @@ trasmessoDi(P,domenica) | trasmessoDi(P, lunedi) | trasmessoDi(P, martedi) | tra
 
  
 
-% 4.    il programma preferito di roberto viene trasmesso alle 10 di sera ma non di mercoledì.
-:- piace(roberto, X), trasmessoAlle(X, Y),Y!=10, trasmessoDi(X, Z),Z=mercoledi.
+
+% 4. il programma preferito di roberto viene trasmesso alle 10 di sera ma non di mercoledì.
+:- piace(roberto, X), trasmessoAlle(X, Y) ,Y != 10.
+:- piace(roberto, X), trasmessoDi(X, mercoledi).
 
  
 
-% 5.    il programma trasmesso martedì sera è “Xfactor”.
-:- trasmessoDi(X, martedi), X!= xfactor.
+
+% 5. il programma trasmesso martedì sera è “Xfactor”.
+trasmessoDi(xfactor,martedi).
 
  
 
-% 6.    michele non guarda mai la televisione alle 9 di sera, mentre giorgio non la guarda mai di domenica.
+
+% 6. michele non guarda mai la televisione alle 9 di sera, mentre giorgio non la guarda mai di domenica.
 :- piace(michele, X), trasmessoAlle(X, 9).
 :- piace(giorgio, X), trasmessoDi(X, domenica).
 
+ 
 
 
-% 7.	“Stranamore” viene trasmesso un’ora dopo rispetto all’orario di inizio
-%       del programma preferito di Giorgio, ma un’ora prima rispetto al programma
-%       trasmesso di lunedì.
- :-trasmessoDi(stranamore,lunedi).
- :-piace(B,P),B=giorgio,P=stranamore.
- :-piace(giorgio,P),trasmessoDi(P,G),G=lunedi.
- 
- :- trasmessoAlle(stranamore,O), trasmessoAlle(P, K),piace(giorgio,P),trasmessoDi(P,G),G=lunedi, O!=(K+1).
- 
- :- trasmessoAlle(stranamore,O),trasmessoAlle(P, K),trasmessoDi(P,lunedi),O!=K-1.
+% 7. “stranamore” viene trasmesso un’ora dopo rispetto all’orario di inizio del programma preferito di giorgio,
+%ma un’ora prima rispetto al programma trasmesso di lunedì.
+:- piace(giorgio, X), trasmessoAlle(X, Y1), trasmessoAlle(stranamore, Y2), Y2 != Y1+1.
+:-trasmessoDi(X, lunedi), trasmessoAlle(X, Y1), trasmessoAlle(stranamore, Y2), Y2 != Y1-1.
