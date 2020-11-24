@@ -1,0 +1,91 @@
+A1: {​​alpi(2), alpi(3), cervino(1,2), cervino(3,2), alpi(1), bianco(2), rosa(3), cervino(3,1), bianco(1)}​​        [2@1]     - best
+
+A2: {​​alpi(2), alpi(3), cervino(1,2), cervino(3,2), rosa(2), rosa(3)}​​        [4@2]
+
+A3: {​​alpi(2), alpi(3), cervino(1,2), cervino(3,2), alpi(1), bianco(2), bianco(3), bianco(1)}​​        [5@1]
+
+A4: {​​alpi(2), alpi(3), cervino(1,2), cervino(3,2), alpi(1), bianco(2), rosa(3), cervino(3,1), rosa(1)}​​        [2@1]     - best
+
+
+:~ cervino(X,Y), #count{​​ Z : alpi(Z) }​​ = Y. [X@Y, X,Y]
+:~ alpi(X), alpi(Y), X>Y, not cervino(X,Y). [X@1, X,Y]
+
+sol:
+//conviene andare a guardare direttamente quali sono i constraint ch3e sono violati
+
+primo constraints: 
+:~ cervino(3,1), 3=1
+:~ cervino(1,2), 3=2
+:~ cervino(3,2), 3=2
+primo constraints sempre sodd
+
+secondo constraints:
+:~ alpi(2),alpi(1), not cervino(2,1).   [2@1,2,1]
+:~ alpi(2),alpi(1),not cervino(2,1). sempre sodd. semplifico
+:~ alpi(3),alpi(2),not cervino(3,2). sempre sodd. semplifico
+
+A1 avra come costo    [2@1]
+
+
+A2:
+:~ cervino(1,2), 2=2        [1@2,1,2]
+:~ cervino(3,2), 2=2        [3@2,3,2]
+:~ cervino(3,2), 3=2  
+
+
+:~ alpi(3),alpi(2), not cervino(3,2). semplifico perche cervino (3,2) e' sempre vero, not sempre false, semplifico per corpo falso
+ho solo alpi 3, alpi 2
+
+A2 avra come costo    [4@2]
+
+
+A3:
+:~ cervino(1,2), 3=2 semplifico corpo falso
+:~ cervino(3,2), 2=2 semplifico corpo falso
+
+
+:~ alpi(2),alpi(1), not cervino(2,1).   [2@1,2,1] e' violato
+:~ alpi(3),alpi(1), not cervino(3,1).   [3@1,3,1] e' violato
+:~ alpi(3),alpi(2), not cervino(3,2).   [3@1,3,2] semplifico perche cervino(3,2) e' sempre vero, not sempre false, semplifico per corpo falso
+
+A3 avra come costo    [5@1]
+
+
+A4:
+:~ cervino(1,2), 3=2 semplifico corpo falso
+:~ cervino(3,2), 2=2 semplifico corpo falso
+:~ cervino(3,1), 3=1 semplifico corpo falso
+
+
+:~ alpi(2),alpi(1), not cervino(2,1).   [2@1,2,1]   {2,1 pago per la tupla 2,1}
+:~ alpi(3),alpi(1), not cervino(3,1).   semplifico perche cervino(3,1) e' sempre vero, not sempre false, semplifico per corpo falso
+:~ alpi(3),alpi(2), not cervino(3,2).   semplifico perche cervino(3,2) e' sempre vero, not sempre false, semplifico per corpo falso
+
+A4 avra come costo    [2@1]
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Dato un grafo G = <N, A>, diciamo che G h...
+% Dato un grafo G = <N, A>, diciamo che G ha una cricca di
+% dimensione k se c'e' un insieme di k nodi tale che ogni
+% coppia di nodi al suo interno e' connessa da un arco.
+%
+% Scrivere un programma logico disgiuntivo che calcoli la
+% cricca di dimensione massima di un dato grafo,
+% rappresentato tramite la relazione binaria arc(Nodo1, Nodo2).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Fill the knapsack without exceed the capacity and maximize the total value.
+
+
+
+object(a,10,10).
+object(b,10,5).
+object(c,10,5).
+object(d,10,5).
+object(e,10,5).
+
+
+
+capacity(12).
