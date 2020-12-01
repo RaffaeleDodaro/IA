@@ -1,0 +1,25 @@
+% Fill the knapsack without exceed the capacity and maximize the total value.
+
+object(a,10,1). % NAME - WEIGHT - VALUE
+object(b,2,9).
+object(c,15,2).
+object(d,7,6).
+object(e,5,3).
+
+capacity(27).
+
+
+% Guess
+in(X) | out(X) :- object(X,_,_).
+
+
+
+% Check
+:- capacity(C), not #sum{​​ Y,X : object(X,Y,_), in(X)}​​ <= C.
+
+
+
+% Optimize
+:~ out(X), object(X,_,Y). [Y@1,X]
+%x oggettto che lascio, v il suo valore, io devo pagaree il suo valore
+%

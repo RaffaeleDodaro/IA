@@ -1,0 +1,59 @@
+% Ci sono 10 studenti: 1, 2, ... 10. Devono essere assegnati a 4 stanze
+% di un dormitorio: a, b, c, d. Ciascuna stanza puo' ospitare al massimo
+% 3 studenti, e nessuno studente puo' essere assegnato a piu' di una
+% stanza.
+%
+% Oltre ai predicati 'room' e 'student', che rappresentano
+% rispettivamente le 4 stanze del dormitorio e i 10 studenti, sono
+% forniti anche i predicati 'adjacent' e 'friend'; 'adjacent definisce
+% coppie di stanze adiacenti, mentre la relazione simmetrica 'friend'
+% definisce coppie di amici. Le stanze adiacenti sono le seguenti:
+% Gli assegnamenti devono rispettare i seguenti vincoli:
+%
+% 1. Gli studenti 3 e 4 devono stare in stanze differenti.
+% 2. Gli studenti 5 e 6 devono stare nella stessa stanza.
+% 3. Ciascuna stanza deve ospitare almeno 2 studenti.
+% 4. La stanza c deve ospitare esattamente 2 studenti.
+% 5. Lo studente 9 deve stare in stanza con tutti i suoi amici.
+% 6. Preferibilmente gli amici dovrebbero stare nella stessa stanza;
+% se non e' possibile, e' preferibile metterli in stanze adiacenti
+
+student(1..10).
+room(a). room(b). room(c). room(d).
+
+adjacent(a,b). adjacent(b,c). adjacent(c,d). adjacent(X,Y):-adjacent(Y,X).
+
+friend(1,2). friend(2,3). friend(3,4). friend(4,5). friend(5,6). friend(6,7). 
+friend(7,8). friend(8,9). friend(9,10). frine(X,Y):-friend(X,Y).
+
+assigned(X,a)| assigned(X,b)| assigned(X,c)| assigned(X,d):-student(X).
+
+:-room(R),#count{X:assigned(X,R)}>3.
+:-assigned
+
+% 1. Gli studenti 3 e 4 devono stare in stanze differenti.
+:-assigned(3,X),assigned(4,X).
+
+
+% 2. Gli studenti 5 e 6 devono stare nella stessa stanza.
+:-assigned(5,X),not assigned(6,X).
+
+
+% 3. Ciascuna stanza deve ospitare almeno 2 studenti.
+:-#count{S:assigned(S,X)}<2,room(X).
+
+
+% 4. La stanza c deve ospitare esattamente 2 studenti.
+:-not #count{X:assigned(X,c)}=2.
+
+
+% 5. Lo studente 9 deve stare in stanza con tutti i suoi amici.
+:-assigned(9,R),friend(9,X),not assigned(X,R).
+
+
+% 6. Preferibilmente gli amici dovrebbero stare nella stessa stanza;
+sameRoom(X,Y):-assigned(X,R),assigned(Y,R),X!=Y.
+adjacentRoom(X,Y):-assigned(X,R1),assigned(Y,R2),X!=Y,adjacent(R1,R2).
+
+:~friend(X,Y), not sameRoom(X,Y),X<Y. [1@2,X,Y]%per ogni coppia xy di amici che non stanno nella stessa stanzq pago 1
+:~friend(X,Y), not sameRoom(X,Y),not adjacentRoom(X,Y),X<Y.[1@1,X,Y]
