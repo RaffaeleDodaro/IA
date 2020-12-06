@@ -1,0 +1,43 @@
+%%%%%%%%%%%%%%%%%%%%
+%   esercizio 1    %
+%%%%%%%%%%%%%%%%%%%%
+a(Z) :- c(Z,Y), not b(Y), Y=Z+1.
+c(Y,Z):- a(Y), b(Z), not a(Z).
+c(Y,Y) | b(Y) :- a(Y), not b(Y).
+
+c(3,4). a(2). b(3).
+
+a(3).                           % c(3,4), b e' in testa ad una regola quindi non posso dire niente al passo 1.  not b(4) e' sempre vero(b(4) falso, not b(4) vero) e lo posso togliere
+c(2,3) :- not a(3).             % a(2),b(3),  b e' in testa ad una regola quindi non posso dire niente al passo 1. quando vado a trovare gli as e' soddisfatta per corpo falso
+c(2,2)|b(2) :- not b(2).        % a(2), 
+
+                                %a(2) :- c(2,3), not b(3).      %a(2) e' un fatto e cancello la regola
+c(3,3) :- not a(3).             %b(3), a(3),    quando vado a trovare gli as e' soddisfatta per corpo falso
+c(3,3)|b(3).                    %not b(3),a(3) quando vado a trovare gli as NON prendo c(3,3) perche' ho gia b(3)
+                 
+c(3,4). a(2). b(3). a(3). c(2,2).
+
+:- #count{X:b(X), not a(X)}<2.
+%inconsistente perche' se vado a prendere :- #count{X:b(X), not a(X)}<2.    viene = 1 che e' sempre < 2 e lo strong constraint e' violato
+
+%TODO punto c
+
+%%%%%%%%%%%%%%%%%%%%
+%   esercizio 2    %
+%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%
+%   esercizio 3    %
+%%%%%%%%%%%%%%%%%%%%
+a(Z) :- c(Z,X), b(Z).
+c(f(Y),f(Z)):- a(Y), a(Z).
+
+c(1,f(1)). b(f(1)). b(1).
+
+a(1).                % :- c(1,f(1)), b(1).
+c(f(1),f(1)).        % :- a(1),a(1).
+a(f(1)).             % :- c(f(1),f(1)),b(f(1)).
+c(f(f(1)),f(f(1))).  % :- a(f(1)), a(f(1))
+c(f(f(1)),f(1)).     %:- a(f(1)), a(1).
+c(f(1),f(f(1))).     %:- a(f(1)), a(1).

@@ -1,0 +1,191 @@
+ionio(L,M) :- tirreno(M,L), spiaggia(M), spiaggia(L), L>2.
+ionio(L,M) | tirreno(L,M) :- spiaggia(L), spiaggia(M).
+spiaggia(2). spiaggia(3). 
+
+PRIMO PUNTO
+ionio(2,2)|tirreno(2,2).            % :-spiaggia(2),spiaggia(2).
+ionio(2,3)|tirreno(2,3).            % :-spiaggia(2),spiaggia(3).
+ionio(3,2)|tirreno(3,2).            % :-spiaggia(3),spiaggia(2).
+ionio(3,3)|tirreno(3,3).            % :-spiaggia(3),spiaggia(3).
+
+ionio(3,2).                         % :- tirreno(2,3), spiaggia(2), spiaggia(3).
+ionio(3,3).                         % :- tirreno(3,3), spiaggia(3), spiaggia(3).
+
+(1) vedere se programma e' stratificato o no. basta vedere se c'e' un not
+che e' all'interno di un ciclo. possiamo capire che e' stratificato o meno 
+disegnando il grafo delle dipendenze. questo esercizio e' stratificato 
+
+(2) partiamo ad istanziare le regole in cui ci sono fatti positivi all'interno
+
+(3) quando vado a semplificare e ci sono fatti negativi nella regola devo stare attento
+e devo vedere se sono anche teste di altre regole. se sono teste non le devo semplificare
+perche potrebbe darsi che da qualche regola mi potrebbero uscire i fatti che sono negati
+e per il momento rimangono indefiniti e non li tocco
+
+(4) istanziare prima le regole NON ricorsive
+
+
+
+
+
+
+
+spiaggia(2). spiaggia(3). + ionio(3,3). ionio(3,2). ionio(2,2). ionio(2,3).
+spiaggia(2). spiaggia(3). + ionio(3,3). ionio(3,2). tirreno(2,2). tirreno(2,3). 
+spiaggia(2). spiaggia(3). + ionio(3,3). ionio(3,2). ionio(2,2). tirreno(2,3).
+spiaggia(2). spiaggia(3). + ionio(3,3). ionio(3,2). tirreno(2,2). ionio(2,3). 
+
+ANSWER
+spiaggia(2). spiaggia(3). ionio(2,2). ionio(2,3). tirreno(3,2). ionio(3,3).
+ANSWER
+spiaggia(2). spiaggia(3). tirreno(2,2). ionio(2,3). tirreno(3,2). ionio(3,3).
+
+:- #max{ W : tirreno(W,Z) } = M, #count {X,Y : ionio(X,Y)} > M, spiaggia(M).
+
+ANSWER
+spiaggia(2). spiaggia(3). tirreno(2,2). tirreno(2,3). ionio(3,2). ionio(3,3).
+ANSWER
+spiaggia(2). spiaggia(3). tirreno(2,2). ionio(2,3). tirreno(3,2). ionio(3,3).
+ANSWER
+spiaggia(2). spiaggia(3). ionio(2,2). ionio(2,3). tirreno(3,2). ionio(3,3).
+ANSWER
+spiaggia(2). spiaggia(3). ionio(2,2). ionio(2,3). ionio(3,2). ionio(3,3).
+
+PUNTO C CORRETTO
+A1: {b(1,2), c(2,2), e(1), a(1,2), a(3,1), p(1,1), d(2,2), a(2,1), t(3)}                 [4@1][2@2] BEST
+
+A2: {b(1,2), c(2,2), e(1), a(1,2), a(3,1), p(1,1), d(2,2), d(1,1), d(3,3), t(2), p(1,2)} [6@1][6@2]
+
+A3: {b(1,2), c(2,2), e(1), a(1,2), a(3,1), p(1,1), d(2,2), t(1), d(3,3), t(2), p(1,2)}   [5@1][5@2]
+
+A4: {b(1,2), c(2,2), e(1), a(1,2), a(3,1), p(1,1), d(2,2), a(2,1), d(3,3)}               [5@2][10@1]
+
+
+% ASP-Core-2 syntax
+:~ p(Y,X), a(X,Y). [X@Y, X, Y]
+:~ d(X,Z), a(W,Y). [X@Y, X,Y,Z,W]
+
+AS1:
+:~ d(2,2), a(1,2).  [2@2,2,2,2,1]
+:~ d(2,2), a(3,1).  [2@1,2,1,2,3]
+:~ d(2,2), a(2,1).  [2@1,2,1,2,2]
+                    [2@2][4@1]
+
+
+AS2:
+   d(X,Z), a(W,Y). [X@Y, X,Y,Z,W]
+:~ d(2,2), a(1,2). [2@2,2,2,2,1]
+:~ d(2,2), a(3,1). [2@1,2,1,2,3]
+
+:~ d(1,1), a(1,2). [1@2,1,2,1,1]
+:~ d(1,1), a(3,1). [1@1,1,1,1,3]
+
+:~ d(3,3), a(3,1). [3@1,3,1,3,3]
+:~ d(3,3), a(1,2). [3@2,3,2,3,1]
+                   [6@1][6@2]
+
+
+
+A3: {b(1,2), c(2,2), e(1), a(1,2), a(3,1), p(1,1), d(2,2), t(1), d(3,3), t(2), 
+p(1,2)}
+
+:~ d(2,2),a(1,2).  [2@2, 2,2,2,1]
+:~ d(3,3),a(1,2).  [3@2, 3,2,3,1]
+
+:~ d(2,2),a(3,1).  [2@1, 2,3,2,3]
+:~ d(3,3),a(3,1).  [3@1, 3,1,3,3]
+                   [5@1][5@2]
+
+
+
+A4: {b(1,2), c(2,2), e(1), a(1,2), a(3,1), p(1,1), d(2,2), a(2,1), d(3,3)}
+:~ d(X,Z), a(W,Y). [X@Y, X,Y,Z,W]
+:~ d(2,2), a(1,2). [2@2, 2,2,3,1]
+:~ d(3,3), a(1,2). [3@2, 3,2,3,1]
+
+:~ d(2,2), a(3,1). [2@1, 2,1,2,3]
+:~ d(3,3), a(3,1). [3@1, 3,1,3,3]
+
+:~ d(2,2), a(2,1). [2@1, 2,1,2,2]
+:~ d(3,3), a(2,1). [3@1, 3,1,3,2]
+                   [5@2][10@1]
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      Secondo esercizio       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+L’università di Pasticciopoli è un ateneo molto prestigioso, anche grazie ai professori
+ed agli scienziati che vi lavorano. Tra questi, uno dei più valenti è la nota ricercatrice Elisabetta
+Lobrevetta, famosa anche per le sue invenzioni ed il suo impegno nel trasferimento tecnologico.
+Elisabetta è molto contenta: ha avuto quest’anno l’onore di essere chiamata a presiedere il comitato
+di programma di una prestigiosa conferenza scientifica internazionale; questo, però comporta
+anche uno sforzo notevole per assicurare rigore scientifico durante la selezione dei contributi
+sottomessi (gli articoli scientifici da parte degli scienziati che aspirano alla pubblicazione negli atti
+della conferenza stessa). Il processo di selezione avviene grazie ad un insieme di colleghi di
+Elisabetta da ogni parte del mondo, esperti nel settore, i quali dovranno revisionare tutti i lavori
+sottomessi e, con le loro revisioni, aiutare la nostra amica a decidere quali lavori accettare e quali,
+invece, bocciare. L’assegnamento degli articoli (in gergo a volte chiamati “paperi”, dall’inglese
+“paper”) ai revisori è un processo complicato e molto delicato. Ecco perché Elisabetta si è rivolta al
+suo amico Ciccio Pasticcio… e quindi a voi, cari studenti. Si scriva un programma logico ASP che
+risolva il problema dell’assegnamento, tenendo conto di quanto indicato di seguito.
+• Ogni paper deve essere assegnato esattamente a 3 revisori
+reviewerPaper(R,P) :- paper(P), reviewer(R).
+:-paper(X), #count{Y: reviewerPaper(X,Y)}!=3, reviewerPaper(R,P).
+
+
+
+• Ogni revisore può avere dei conflitti di interesse con qualche paper (ad esempio, se tra gli autori
+c’è un amico, od un collega); questi sono dichiarati in anticipo. Nessun paper può quindi essere
+assegnato ad un revisore che sia in conflitto con esso.
+:-paper(P), reviewer(R), conflict(R,P).
+
+
+
+• Elisabetta definisce un numero minimo ed un numero massimo di paper assegnati a ciascun
+revisore; quindi, ogni revisore deve avere assegnati almeno “min” e al massimo “max” paper.
+
+
+
+
+• Ciascun revisore specifica quali, tra tutti i paper, avrebbe “piacere” di revisionare. In genere,
+questa indicazione è fatta sulla base delle proprie competenze (un revisore non dovrebbe mai
+revisionare un lavoro che tratti di argomenti su cui è poco ferrato). In particolare, ciascun
+revisore può specificare delle preferenze sui paper, indicando ciascun paper come “prima
+scelta” o “seconda scelta”, oppure non indicandolo affatto (in questo caso, il paper è “non
+scelto”). A ciascun revisore possono essere assegnati al massimo 2 paper non scelti da lui.
+
+
+
+• È molto importante, per ciascun revisore, massimizzare il numero di paper a lui assegnati e da
+lui indicati come prime scelte; meno importante, ma sempre preferibile, è anche massimizzare
+il numero di paper a lui assegnati e da lui indicati come seconde scelte.
+
+
+
+• Ogni paper è caratterizzato da una lista di “parole chiave” (o “keyword); queste indicano
+(orientativamente) gli argomenti scientifici in esso trattati. Ciascun revisore, inoltre, è
+caratterizzato da una lista di keyword su cui è considerato un esperto. Per ciascun paper, si
+vuole massimizzare il numero di keyword “coperte” da almeno due dei tre revisori assegnati;
+questa è la cosa più importante in assoluto.
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%      Terzo esercizio       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+p(Y,X) :- q(f(X),Y).
+q(f(X),Y) :- p(Y,X).
+r(f(X)) :- p(f(X),Y), r(X).
+
+q(f(1),1). p(f(1),1). r(1).
+
+p(1,1).
+r(f(1)).
+q(f(1),f(1)).        % :- p(f(1),1).
