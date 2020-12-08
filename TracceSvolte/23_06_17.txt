@@ -1,0 +1,102 @@
+andiamo(X) | a(X) :- comandare(_,X), X < 4.
+comandare(U,Z) :- b(U), not trattore(U), b(Z).
+trattore(W) :- b(X), not comandare(W,X), W = X - 1.
+b(3).
+b(4).
+
+comandare(3,3) :- not trattore(3).          %b(3),b(3)
+comandare(4,4).                             % :- not trattore(4).        %b(4),b(4)             trattore(4) non lo posso mai avere, quindi corpo falso
+comandare(4,3).                             % :- not trattore(4).        %b(4),b(3)             trattore(4) non lo posso mai avere, quindi corpo falso
+comandare(3,4) :- not trattore(3).          %b(3),b(4)
+
+trattore(2).                                %:- not comandare(2,3).          %b(3)              trattore(2) non lo posso mai avere, quindi corpo falso
+trattore(3) :- not comandare(3,4).          %b(4)
+
+andiamo(3) | a(3) :- comandare(3,3).
+
+
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            comandare(3,3).     comandare(3,4).     a(3).       AS
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            comandare(3,3).     comandare(3,4).     andiamo(3). AS
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            comandare(3,3).     trattore(3).        andiamo(3).
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            comandare(3,3).     trattore(3).        a(3).
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            trattore(3).        andiamo(3).                     AS
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            trattore(3).        a(3).                           AS
+
+
+%per vedere se sono as, anzitutto vado a vedere il programma ground che abbiamo ottenuto  per vedeer se per caso
+%il programma ottenuto fosse aciclico. se cosi fosse mi basta verificare la condizione di supporto
+%in questo caso il programma e' aciclico perche', e' vero che ho un ciclo ma e' negativo e non lo guardo per verificare la ciclicita' del programma
+%in questo caso il supporto e' necessario e sufficiente e quindi mi basta vedere as per as che sia supportato.
+
+% per vedere se e' supportato:
+% un atomo e' supportato se esiste almeno una regola che ha corpo vero rispetto ad I.
+% prendo l'atomo da verificare e vedo se e' in testa ad una regola con corpo vero
+
+
+
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     trattore(3).        andiamo(3).                     AS
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     trattore(3).        a(3).                           AS
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     comandare(3,3).     comandare(3,4).     a(3).       AS
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     comandare(3,3).     comandare(3,4).     andiamo(3). AS
+
+:- a(X), #count{Y,Z : comandare(Y,Z)} > X.
+%violo AS 3
+
+
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     trattore(3).        a(3).                           AS
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     trattore(3).        andiamo(3).                     AS
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     comandare(3,3).     comandare(3,4).     andiamo(3). AS
+
+%   b) Si immagini ora di dover preferire gli answer set in cui non “andiamo sul trattore”: cioè preferiamo le soluzioni in cui 
+% non sono contemporaneamente veri “andiamo” e “trattore” per lo stesso “X”. Si modifichi il programma adeguatamente aggiungendo 
+% uno o più weak constraints e si calcolino i costi di ciascun answer set, indicando quello ottimo (o quelli ottimi).
+:~andiamo(X),trattore(X). [1@X]
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     trattore(3).        a(3).                           AS     [0@1]
+b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).     comandare(3,3).     comandare(3,4).     andiamo(3). AS     [0@1]
+
+
+
+
+% c) Si immagini ora che ci si accorga che è ancora più importante “comandare” solo se “andiamo”: cioè, non ci piacciono le soluzioni
+% in cui “comandare” è vero per qualche “X” al secondo parametro, ma “andiamo” è falso per lo stesso “X”.
+:~comandare(_,X), not andiamo(X). [2@X]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                   ES2                    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Esercizio 2.
+% Siano dati in input:
+% • un grafo non orientato G=<V,E>;
+% • un insieme di colori.
+% Si scriva un programma ASP che calcoli il numero acromatico di G. Il "numero acromatico" di un grafo G è il massimo numero di colori differenti con i quali è possibile colorare
+% i nodi di G rispettando le seguenti direttive:
+% • ciascun nodo deve essere colorato con esattamente un colore;
+% • per ogni coppia di nodi agli estremi di un arco si devono scegliere due colori distinti;
+% • per ogni coppia di colori distinti C1 e C2, tra quelli usati nella colorazione, deve esistere almeno un arco in E i cui due vertici sono colorati con C1 e C2, rispettivamente.
+% Si ricordi che tra tutte le colorazioni possibili quella di interesse è quella in cui il numero di colori usati è massimo.
+% Modello dei dati in INPUT:
+% • node(X)  i nodi in V del grafo in input
+% • arc(X,Y)  gli archi in E del grafo in input
+% • color(X)  i colori a disposizione per costruire le colorazioni
+% Modello dei dati in OUTPUT:
+% • achromaticNumber(X)  il numero acromatico del grafo in input
+
+color(rosso). color(verde). color(blu). color(giallo). color(nero).
+arc(1,3). arc(1,2). arc(3,2).
+node(1..3).
+arc(X,Y):-arc(Y,X).
+coloro(N,C)| notColoro(N,C) :- color(C), node(N).
+
+
+% • ciascun nodo deve essere colorato con esattamente un color;
+:-node(X), #count { C : coloro(X,C) }!=1.
+
+% • per ogni coppia di nodi agli estremi di un arc si devono scegliere due colori distinti;
+:-arc(X,Y),coloro(X,C),coloro(Y,C).
+
+% • per ogni coppia di colori distinti C1 e C2, tra quelli usati nella colorazione, deve 
+%   esistere almeno un arc in E i cui due vertici sono colorati con C1 e C2, rispettivamente.
+colorArc(X, Y) :- arc(A,B), coloro(A,X), coloro(B,Y).
+:- color(X), color(Y), X=Y, #count{X, Y : colorArc(X, Y)} = 0.
+
+achromaticNumber(X) :- color(X), #count{N:coloro(N,X)}.
