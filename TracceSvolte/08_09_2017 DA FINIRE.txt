@@ -1,0 +1,26 @@
+%a) Si consideri il seguente programma logico e se ne calcolino gli answer set, illustrando
+%adeguatamente il procedimento seguito.
+
+a(L,L) | b(L,L) :- c(L), L>1.
+a(L,M) :- b(M,L), c(L), L<3.
+b(M,L) :- a(M,X), c(L), not c(X).
+
+c(2). c(3). b(1,2). b(2,3).
+
+a(2,2) | b(2,2).            % :- c(2).          %%%% perche' nelle soluzioni finali li prendiamo entrambi?
+a(3,3) | b(3,3).            % :- c(3).          %%%% """""""""""""""""""""""""""""" prendiamo solo uno alla volta e non entrambi come sopra?
+
+a(2,1).                     % :- b(1,2),c(2).
+
+                            %b(2,2) :- not c(1).         %
+
+
+                            %b(2,2) :- a(2,2), not c(2).
+
+
+                            %b(3,2) :- a(3,3), not c(3).
+                            %b(3,3) :- a(3,3), not c(3).
+
+
+c(2). c(3). b(1,2). b(2,3). a(2,1). a(2,2). b(2,2). a(3,3).
+c(2). c(3). b(1,2). b(2,3). a(2,1). a(2,2). b(2,2). a(3,3).
