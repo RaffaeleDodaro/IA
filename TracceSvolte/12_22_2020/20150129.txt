@@ -1,0 +1,28 @@
+%%%%%%%%%%%%
+%   ES 3   %
+%%%%%%%%%%%%
+cell(X,Y,S).
+inCell(X,Y,piu)|inCell(X,Y,meno)|inCell(X,Y,vuoto):-cell(X,Y,S).
+adiacenti(X,Y,X1,Y):-cell(X,Y,_),cell(X1,Y,_),X1=X+1.
+adiacenti(X,Y,X1,Y1):-adiacenti(X1,Y1,X,Y).
+:-inCell(X,Y,P),inCell(X1,Y1,P),adiacenti(X,Y,X1,Y1),P!=vuoto.
+:-inCell(X1,Y1,vuoto),inCell(X2,Y2,P),cell(X1,Y1,S),cell(X2,Y2,S),P!=vuoto.
+:-inforiga(R,P,_),#count{C:inCell(R,C,piu)}!=P.
+:-inforiga(R,P,_),#count{C:inCell(R,C,meno)}!=M.
+
+
+%%%%%%%%%%%%
+%   ES 2   %
+%%%%%%%%%%%%
+in(N)|out(N):-nascondiglio(N,_).
+associo(N,I)|notAssocio(N,I):-in(N),indovinello(I,_).
+associo(N,I)|nonAssocio(N,I):-nascondiglio(N,_),indovinello(I,_).
+:-associo(N,I1),associo(N,I2),I1!=I2.
+:-associo(N1,I),associo(N2,I),N1!=N2.
+precede(N1,N2) | notPrecede(N1,N2):-associo(N1,_),associo(N2,_).
+precedeTran(N1,N2) :- precede(N1,N2).
+precedeTran(N1,N2):-precede(N1,N3), precedeTran(N3,N2).
+:-precedeTran(N1,N2),precedeTran(N2,N1).
+tappe(T):-#count{N:associo(N,_)}=T.
+posizione(1).
+sequenza(N,P)|notSequenza(N,P):-
