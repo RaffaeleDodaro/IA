@@ -1,0 +1,67 @@
+q(Y,X) :- t(X,_), h(Y), not r(Y,X).
+r(X,Z) :- s(X,Z), not q(X,Z).
+t(X,Y)|h(X):-q(Y,X).
+
+s(1,2). h(1). t(2,2).
+
+(1)
+r(1,2):-not q(1,2).
+q(1,2):-not r(1,2). sodd
+t(2,1)|h(2):-q(1,2). """"  non è in calcolo modelli => corpo falso
+q(2,2):-h(2),not r(2,2). sodd
+q(1,2):-t(2,1),not r(1,2). sodd
+
+
+(2)
+r(1,2):-not q(1,2). sodd
+q(1,2):-not r(1,2). sodd testa vera
+t(2,1)|h(2):-q(1,2). sodd
+q(2,2):-h(2),not r(2,2). sodd corpo falso
+q(1,2):-t(2,1),not r(1,2). sodd testa vera
+
+
+
+                        %questo e' (1)  r(1,2) => mod supportato => as
+
+s(1,2). h(1). t(2,2).+
+
+                        %questo e' (2) q(1,2),t(2,1) => mod supportato => as
+                        %invece di (2) andrebbe bene  (2) q(1,2),h(2),q(2,2) => mod supportato => as 
+
+
+:~ h(X), #sum{Y:q(X,Y)}>1. [X@1]
+:~ t(X,Y), r(_,X). [1@X,X,Y]
+
+
+
+s(1,2). h(1). t(2,2). r(1,2).
+(1 AS)
+:~                 [0@1]
+:~ t(2,2), r(1,2). [1@1]
+
+
+s(1,2). h(1). t(2,2). q(1,2). t(2,1).
+(2 AS)
+:~ h(1),#sum{Y:q(1,Y)} > 1 [1@1]                %BEST
+:~ t(2,2), r(_,X).         [0@2] % non ho r     %BEST
+
+
+s(1,2). h(1). t(2,2). q(1,2). h(2). q(2,2).
+(3)
+:~ h(1),#sum{Y:q(1,Y)} > 1.     [1@1]
+:~ h(2),#sum{Y:q(2,Y)} > 1.     [2@1]
+:~ h(1),#sum{Y:q(1,Y)} > 1.     [1@1]
+:~ h(2),#sum{Y:q(2,Y)} > 1.     [2@1]
+                                [6@1]
+:~ t(2,2),r(_,2).               [1@2,X,Y]
+
+
+
+
+s(1,2). h(1). t(2,2). r(1,2).
+s(1,2). h(1). t(2,2). q(1,2). t(2,1).
+s(1,2). h(1). t(2,2). q(1,2). h(2). q(2,2).
+
+:-#sum{Y,X:t(X,Y)}<2.
+
+#GLI AS RIMANGONO QUELLI CALCOLATI IN PRECEDENZA
