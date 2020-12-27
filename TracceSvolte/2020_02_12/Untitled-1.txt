@@ -1,0 +1,166 @@
+%%%%%%%%%%%%%%%%%%
+%   ESERCIZIO 1  %
+%%%%%%%%%%%%%%%%%%
+a(X,Y,Z)  :- b(X,Y), q(Z,X), not t(Y,X).
+b(X,Y) :- q(X,Z), c(Y), X<Y.
+c(Y) | t(X,X) :- a(X,_,Y), not b(X,Y).
+
+b(1,1).  b(2,2).
+q(2,1). q(3,2).
+c(2).
+
+
+% non e' cosi necessario fare il grafo delle dipendenze perche sono 3 regole
+% si parte ad istanziare gli atomi positivi delle regole
+
+% la prima regola ha bisogno di b e di q. visto che b e' in testa alla seconda regola... minuto 23
+% seconda regola = alla prima
+
+
+%tutte le regole fanno parte di un ciclo. non ci sono regole di uscita(cioè se ho una regola p:-b, un'altra p:-q e un'altra q:-p, le ultime 2 
+%sono regole ricorsive, la prima è una regola di uscita perché nel suo corpo non ci sono atomi ricorsivi)
+
+a(1,1,2).       %b(1,1),q(2,1),not t(1,1)  % di t non posso dire niente perche' e' in testa ad una regola, quando avrò finito l'instanziazione 
+% di tutte le regole potrò tornare su questa e se non avrò t(1,1) da nessuna regola allora lo posso semplificare... minuto 26. a minuto 39 posso togliere t(1,1)
+
+a(2,2,3) :- not t(2,2).     %b(2,2), q(3,2) come sopra per quanto riguarda t
+
+b() :- q(),c(2)  % la regola al momento non produce istanze perché non ho istanze di q con X<2 ma la potrebbe produrre più tardi.
+
+                %c(2) | t(1,1) :- a(1,1,2), not b(1,2). cancello la regola perche c(2) e' in testa ed è un fatto
+c(3) | t(2,2) :- a(2,2,3), not b(2,3). % ho derivato un istanza di c e t. 
+
+%a(1,1,2) e a(2,2,3) non li posso semplificare perché sono in testa a delle regole
+% di b non posso dire niente
+
+
+
+
+%%%%%%% seconda passata
+%se riparto dalla seconda regola avevo bisogno di b e di q. q era un fatto e non cambia. di b non ho altre istanze
+%parto dalla seconda regola
+
+
+%parto dalla seconda mettendo c(3). minuto 32 e 34
+b(2,3) :- c(3).         % q(2,1),
+
+a(2,3,3)  :- b(2,3).        % , q(3,2), not t(3,2)
+
+c(3) | t(2,2) :- a(2,3,3), not b(2,3).  % va bene anche se derivo la stessa di riga 31 ma ho un letterale diverso
+% t(2,2) è l'unico t che potrebbe diventare potenzialmente vero,  gli altri t li posso eliminare
+
+% prendo la scelta tra atomi in testa e corpo negativo (riga 23)
+
+
+                                                                c(3),b(2,3), a(2,3,3) %ramo non supportato. lo cancello. minuto 35
+
+                                                   a(2,2,3)     
+                                                                t(2,2) % se prendo t(2,2) chi è che da il supporto ad a(2,2,3)? ramo non supportato.
+
+                                                                b(2,3) %se prendo b(2,3) vero devo prendere come vero c(3) e torno nella situazione di sopra. lo cancello
+
+
+b(1,1).  b(2,2). q(2,1).  q(3,2). c(2). a(1,1,2).
+                                                   t(2,2) % ramo non supportato.
+
+
+% NOTA: c(3) | t(2,2) :- a(2,3,3), not b(2,3). in questo caso potrei prendere per vero c(3), t(2,2), b(2,3), quindi mi si aprono 3 scelte
+% la scelta la devo fare per regole che hanno la disgiunzione in testa o atomo negativo nel corpo
+% parto dalla regola che mi mette di fronte a meno scelte
+
+                                    %%alla fine e' inconsistente, perche' nessun atomo in testa e' supportato
+
+%%% secondo punto%%%%%
+% a-2) Si aggiunga il seguente strong constraint al programma del punto precedente.
+% :- c(Y), a(_,Y,_).
+
+% Come influisce sulle soluzione del programma? Perché? Motivare adeguatamente la risposta.
+% il programma rimane inconsistente
+
+
+%%% terzo punto%%%%%
+
+A1: {q(2,1), q(3,2), b(1,1), b(2,2), c(1), c(2), t(1,1), a(2,2,3), c(3), b(2,3), t(3,2)}            %BEST
+
+A2: {q(2,1), q(3,2), b(1,1), b(2,2), c(1), c(2), t(1,1), a(2,2,3), c(3), b(2,3), a(2,3,3)}          
+
+A3: {q(2,1), q(3,2), b(1,1), b(2,2), c(1), c(2), t(1,1), t(2,2)}                                    %BEST
+
+
+% ASP-Core-2 syntax
+:~ t(X,Y), c(X), c(Y). [X@Y,X,Y]	
+:~ a(X,Y,Z). [1@2,X,Y,Z]
+
+
+%% A1
+:~ a(2,2,3)             [1@2, 2, 2, 3]
+:~ t(1,1),c(1)          [1@1, 1, 1]
+:~ t(3,2),c(3),c(2)     [3@2, 3, 2]
+
+%% A2
+:~a(2,2,3)              [1@2, 2, 2, 3]
+:~a(2,3,3)              [1@2,2,3,3]
+:~t(1,1), c(1)          [1@1,1,1]
+
+%% A3
+:~t(1,1), c(1)          [1@1, 1, 1]
+:~t(2,2), c(2)          [2@2, 2, 2]
+
+
+
+%%%%%%%%%%%%%%%%%%
+%   ESERCIZIO 3  %
+%%%%%%%%%%%%%%%%%%
+
+p(f(X),f(X)) :- p(X,f(X)).
+p(1,f(1)). 
+
+p(f(1),f(1)).                %:- p(1,f(1)).
+%se vado a sostituire sopra non matcherà perché non posso usare X in p(X,f(X)) perché questa istanza ha f(X) uguale. minuto 55
+
+
+AS:     p(1,f(1)). + {p(f(1),f(1))} 
+
+
+
+%seconda parte
+
+q(f(X,Y)):-q(f(X)),q(Y), not p(f(X),f(Y)).
+q(1). q(f(1)).
+
+                        %not p(f(1),f(1)). %q(f(1)),q(1), regola si semplifica
+q(f(1,f(1)):-.                  %q(f(1)),q(f(1)), not p(f(1),f(f(1))).
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%
+%   ESERCIZIO 2  %
+%%%%%%%%%%%%%%%%%%
+
+programmer(A, L)
+hairStylist(P, S)
+together(A1, A2)
+separate(A1, A2)
+hairStylistsMin(N)
+
+assegno(A,P)|notAssegno(A,P) :- programmer(A, L), hairStylist(P, S).
+
+:-#count{P:assegno(A,P)}!=1 , programmer(A,_).                  %C1
+
+:-together(A1,A2), assegno(A1,P1), assegno(A2,P2), P1!=P2.      %C2
+
+:-hairStylistsMin(K), #count { P : assegno(_,P) } < K.          %C3
+
+:~separate(A1,A2), assegno(A1,P), assegno(A2,P).  [1@1,A1,A2]   %W1
+
+
+scuolaUsata(S):-assegno(_,P),hairStylist(P,S).
+:~ hairStylist(_,S), not scuolaUsata(S). [1@2,S] %W2
+
+
+totalTime(P,T):-#sum{K:assegno(K,P),programmer(A,K)} = T, hairStylist(P,_).
+:~ #max{T:totalTime(P,T)} = M. [M@3]
+%W3
