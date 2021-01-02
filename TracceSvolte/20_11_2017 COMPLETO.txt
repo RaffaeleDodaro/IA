@@ -1,0 +1,114 @@
+r(Z) :- s(X), Z=X+1, not p(Z).
+s(X) :- r(X), not p(X).
+p(X) | t(X) :- q(Y,X), not s(Y).
+
+r(2). p(4). q(1,2). q(1,3). 
+
+
+%ISTANZIO
+
+p(2) | t(2).        % q(1,2), :- not s(1)
+p(3) | t(3).        % q(1,3), :- not s(1)
+s(2) :- not p(2).               % r(2), 
+r(3) :- s(2), not p(3).
+
+s(3) :- r(3), not p(3).
+
+
+r(2). p(4). q(1,2). q(1,3). p(2). p(3). % CORRETTO
+
+r(2). p(4). q(1,2). q(1,3). p(2). t(3).  % CORRETTO
+
+                                        s(2)  % CORRETTO
+r(2). p(4). q(1,2). q(1,3). t(2). p(3). 
+                                        p(2)  % NON MINIMALE
+
+                                        s(2),r(3),s(3)   % CORRETTO
+r(2). p(4). q(1,2). q(1,3). t(2). t(3). 
+                                        p(2)   % NON MINIMALE
+
+
+
+
+%%%%%%%%%%%%%   PASSO B     %%%%%%%%%%%
+
+:- #sum{ X, Y : s(X), p(Y) } >= 5.
+
+
+r(2). p(4). q(1,2). q(1,3). p(2). p(3).     % RIMANE
+
+r(2). p(4). q(1,2). q(1,3). p(2). t(3).     % RIMANE
+
+r(2). p(4). q(1,2). q(1,3). t(2). p(3). s(2).   % RIMANE        PERCHE' :- #sum{ 2, 4 : s(2), p(4) } >= 5.
+                                                %               PERCHE' :- #sum{ 2, 3 : s(2), p(3) } >= 5.
+                                                %                          tot = 4 perche sommo le X
+
+%%%%%%%%%%%%%   PASSO C     %%%%%%%%%%%
+
+:~ p(X), s(Y). [Y@X, X,Y]
+
+
+r(2). p(4). q(1,2). q(1,3). p(2). p(3).  [6@1] [6@2] [6@3]
+
+:~ p(4), s(2). [2@4, 4,2]
+:~ p(4), s(2). [2@4, 4,2]
+:~ p(4), s(2). [2@4, 4,2]
+
+:~ p(2), s(2). [2@2, 2,2]
+:~ p(2), s(2). [2@2, 2,2]
+:~ p(2), s(2). [2@2, 2,2]
+
+:~ p(3), s(2). [2@3, 3,2]
+:~ p(3), s(2). [2@3, 3,2]
+:~ p(3), s(2). [2@3, 3,2]
+
+
+r(2). p(4). q(1,2). q(1,3). p(2). t(3). %NON PAGO   BEST
+
+r(2). p(4). q(1,2). q(1,3). t(2). p(3). s(2). [2@1] [2@2]       
+:~ p(4), s(2). [2@4, 4,2]
+:~ p(3), s(2). [2@3, 3,2]
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Esercizio 2.
+% Si scriva un programma ASP che risolva il problema seguente: dato un grafo (V,A) e un insieme di
+% coppie di nodi C, calcolare un sottoinsieme P dei nodi V tale che tutte le seguenti condizioni siano
+% rispettate.
+% • Ogni coppia di nodi di P deve essere connessa, ossia deve esistere un cammino tra i due in
+% A.
+% • Per ogni coppia di nodi (C1,C2) in C, al più uno tra C1 e C2 deve appartenere a P.
+% • La cardinalità di P deve essere la più grande possibile.
+
+% È richiesto inoltre di produrre in output un predicato che conservi la cardinalità di P.
+
+% Modello dei dati in INPUT: 
+% node(X) <- i nodi in V 
+% arc(X,Y) <- gli archi in A
+% pair(X,Y) <- le coppie in C
+
+% Modello dei dati in OUTPUT:
+% in(X) <- i nodi in P
+% length(L) <- la cardinalità di P.
+
+node(1..5).
+
+arc(1, 2). arc(2, 3). arc(2, 4). arc(3, 2). arc(3, 5). arc(5, 2). arc(5, 4).
+
+in(X) | notin(X) :- node(X).
+
+% • Ogni coppia di nodi di P deve essere connessa, ossia deve esistere un cammino tra i due in A.
+connessi(X,Y) :- arc(X,Y).
+connessi(X,Y) :- arc(X,Z), connessi(Z,Y). 
+:-in(X), in(Y),X!=Y,not connessi(X,Y).
+
+
+% • Per ogni coppia di nodi (C1,C2) in C, al massimo uno tra C1 e C2 deve appartenere a P.
+
+% • La cardinalità di P deve essere la più grande possibile.
+:~ notin(X).[1@1]
+
+% È richiesto inoltre di produrre in output un predicato che conservi la cardinalità di P.
+cardinalita(X) :- #count{P:in(P)}=X.
