@@ -1,0 +1,14 @@
+#maxint = 1000.
+
+inValigia(X) v nonInValigia(X) :- capo(X,_,_,_).
+
+pesoInValigia(P) :- #sum { X : inValigia(_,_,_,X) } = P.
+:- pesoInValigia(P), P > 300.
+
+almenoDueDiTipo(Tipo) :- capo(X1,Tipo,_,_), capo(X2,Tipo,_,_), X1 != X2.
+:- capo(_,Tipo,_,_), not almenoDueDiTipo(Tipo).
+
+:- inValigia(X,Tipo,Colore,_), not setCompletoColore(Colore).
+setCompletoColore(Colore) :- inValigia(_,scarpe,Colore,_), inValigia(_,intimo,Colore,_), inValigia(_,inferiore,Colore,_), inValigia(_,superiore,Colore,_).
+
+:~ nonInValigia(X).

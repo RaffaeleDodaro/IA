@@ -15,13 +15,15 @@ r(3) :- s(2), not p(3).
 s(3) :- r(3), not p(3).
 
 
-r(2). p(4). q(1,2). q(1,3). p(2). p(3). % CORRETTO
+r(2). p(4). q(1,2). q(1,3). p(2). p(3).  % CORRETTO
 
 r(2). p(4). q(1,2). q(1,3). p(2). t(3).  % CORRETTO
 
                                         s(2)  % CORRETTO
 r(2). p(4). q(1,2). q(1,3). t(2). p(3). 
-                                        p(2)  % NON MINIMALE
+                                        p(2)  % NON MINIMALE 
+
+
 
                                         s(2),r(3),s(3)   % CORRETTO
 r(2). p(4). q(1,2). q(1,3). t(2). t(3). 

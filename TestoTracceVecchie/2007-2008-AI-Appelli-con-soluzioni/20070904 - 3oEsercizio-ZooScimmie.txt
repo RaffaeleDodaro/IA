@@ -1,0 +1,23 @@
+scimmia(samuele).
+scimmia(anna).
+scimmia(michele).
+scimmia(margherita).
+
+frutto(banana,S) v frutto(pera,S) v frutto(arancia,S) v frutto(mela,S) :- scimmia(S).
+:- frutto(F,S1), frutto(F,S2), S1!=S2.
+
+riposo(erba,S) v riposo(ramo,S) v riposo(fiume,S) v riposo(rocce, S) :- scimmia(S).
+:- riposo(R,S1), riposo(R,S2), S1!=S2.
+
+:-frutto(banana,samuele).
+riposo(erba,samuele).
+
+:- riposo(rocce,S), not frutto(mela,S).
+
+:-  frutto(pera,S), riposo(ramo,S).
+
+riposo(fiume,anna).
+:-  frutto(pera,anna).
+:- riposo(ramo,margherita).
+:- frutto(arancia,michele).
+

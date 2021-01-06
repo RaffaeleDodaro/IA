@@ -1,0 +1,152 @@
+Esercizio 1. Svolgere tutti i punti.
+
+a) Dato il seguente programma Datalog, disegnarne il grafo delle dipendenze. 
+Determinare poi l’unico answer set mediante il calcolo del minimo 
+punto fisso dell’operatore TP.
+
+r(3,1).		q(2).
+
+r(Z,Y) :- s(Z), Y=Z+1, Z<3.
+s(X) :- r(_, X), not q(X).
+
+RISPOSTA: 	{q(2), r(1,2), r(3,1), s(1)}.
+
+b) Si aggiunga al precedente programma la seguente regola: 
+
+p(X) v q(X) :- r(X, _), not s(X). 
+
+Calcolare quindi TUTTI gli answer set del programma risultante.
+
+RISPOSTA: 	{r(3,1), q(2), s(1), r(1,2), p(3)}
+		{r(3,1), q(2), s(1), r(1,2), q(3)}
+
+c) Si aggiunga al precedente programma il seguente weak constraint.
+ 
+:~ q(X), q(Y). [Y:X]
+
+Calcolare quindi gli answer set riportando per ciascuno il costo. Indicare quindi quello ottimo.
+
+RISPOSTA:	{r(3,1), q(2), s(1), r(1,2), p(3)}
+Cost ([Weight:Level]): <[0:1],[2:2],[0:3]> (BEST)
+
+{r(3,1), q(2), s(1), r(1,2), q(3)}
+Cost ([Weight:Level]): <[0:1],[5:2],[5:3]>
+
+d) Si aggiunga il seguente strong constraint.
+
+:- p(X), r(X,Y).
+
+Come influisce sulle soluzione del programma? Perché?  
+
+
+RISPOSTA: 	{r(3,1), q(2), s(1), r(1,2), q(3)}
+		Cost ([Weight:Level]): <[0:1],[5:2],[5:3]>	
+(Uno dei due modelli candidati non è più un answer set: infatti 
+nel primo dei due sono presenti gli atomi p(3) e r(3,1), la verità 
+dei quali viola il constraint).
+
+=====================================================================
+
+C’è una grande novità: Ciccio Pasticcio si sposa! Grazie alla sua agenzia matrimoniale, 
+"Cuori Disgiunti"  (si veda la traccia dell’esame di IA del 09/01/2007), ha finalmente 
+trovato l’anima gemella: Renata Limbranata. I due piccioncini devono ora organizzare il 
+ricevimento di nozze, ma purtroppo non navigano nell’oro; quindi saranno costretti a 
+fare i conti con l’impossibilità di invitare tutti i propri amici.  Vogliamo aiutarli 
+nell’arduo compito di scegliere chi invitare e chi  tagliare fuori?
+Si scriva un programma DLV che decida quali persone invitare al 
+ricevimento, tenendo conto delle seguenti considerazioni.
+
+•	Ciccio e Renata hanno un budget limitato a 10.000 Euro.
+•	Si vuole invitare il maggior numero di persone possibile.
+•	Il costo per ciascun adulto è pari a 200 Euro, mentre per ciascun bambino è di 100.
+•	Non si possono separare le famiglie: se uno dei membri è invitato, devono esserlo 
+	anche tutti gli altri; oppure nessuno sarà invitato.
+
+* Modello dei dati in input: 
+adulto(Nome).   			? Gli amici adulti
+bambino(Nome). 				? Gli amici bambini
+stessaFamiglia(Nome1,Nome2) 		? Coppie di amici appartenenti 
+					allo stesso nucleo familiare.
+
+=== Soluzione: ===
+
+#maxint=30.
+
+invitato(X,2) v nonInvitato(X) :- adulto(X).
+invitato(X,1) v nonInvitato(X) :- bambino(X).
+
+totaleSpesa(T) :- #sum{ Y,X : invitato(X,Y)} = T, #int(T).
+
+:- totaleSpesa(T), T > 10.
+
+:- invitato(X,_), stessaFamiglia(X,Y), nonInvitato(Y).
+
+:~ nonInvitato(X). [1: ]
+
+stessaFamiglia(X,Y) :- stessaFamiglia(Y,X).
+stessaFamiglia(X,Z) :- stessaFamiglia(X,Y), stessaFamiglia(Y,Z).
+
+=== Soluzione ALTERNATIVA: ===
+
+#maxint=30.
+
+invitato(X) v nonInvitato(X) :- adulto(X).
+invitato(X) v nonInvitato(X) :- bambino(X).
+
+nAdulti(X)  :- #count { A : invitato(A), adulto(A)  } = X, #int(X).
+
+nBambini(X) :- #count { B : invitato(B), bambino(B) } = X, #int(X).
+
+tAdulti(X)  :- nAdulti(NA),  X = NA * 2.
+tBambini(X) :- nBambini(NB), X = NB * 1.
+
+:- tAdulti(TA), tBambini(TB), T = TA + TB, T > 10.
+
+:- invitato(X), stessaFamiglia(X,Y), not invitato(Y).
+
+:~ nonInvitato(X). [1: ]
+
+stessaFamiglia(X,Y) :- stessaFamiglia(Y,X).
+stessaFamiglia(X,Z) :- stessaFamiglia(X,Y), stessaFamiglia(Y,Z).
+
+=====================================================================
+
+Ogni giorno della settimana, Gelsomina si prende cura di cinque bambini dei vicini. I nomi 
+dei bambini sono: Marco, Susy, Margherita, Ester, Otto.  I cognomi sono: Rossi, Bianchi, 
+Avorio, Verdi, Neri. Ciascun bambino ha un’età differente. Le età sono due, tre, quattro, 
+cinque e sei anni. Vogliamo associare al nome di ciascun bambino il rispettivo cognome e 
+la giusta età. Si scriva un programma DLV che risolva il problema, tenendo conto dei 
+seguenti indizi:
+
+1.	Una bambina si chiama Susy Verdi.
+2.	Marco è un anno più grande del figlio degli Avorio, che a sua 
+	volta è un anno più grande di Ester.
+3.	Il figlio dei Rossi è tre anni più grande di Margherita.
+4.	Otto ha il doppio degli anni del bambino dei Neri.
+
+---
+
+#maxint = 10.
+
+nome(marco).
+nome(susy).
+nome(margherita).
+nome(ester).
+nome(otto).
+
+cognome(X,rossi) v cognome(X,bianchi) v cognome(X,avorio) 
+		 v cognome(X,verdi) v cognome(X,neri) :- nome(X).
+eta(X,2) v eta(X,3) v eta(X,4) v eta(X,5) v eta(X,6) :- nome(X). 
+
+:- cognome(X1, Y), cognome(X2, Y), X1 <> X2.
+:- eta(X1, Y), eta(X2, Y), X1 <> X2.
+
+cognome(susy,verdi).
+
+unAnnoPiuGrande(X,Y)  :- eta(X,E1), eta(Y,E2), E1 = E2 + 1.
+treAnniPiuGrande(X,Y) :- eta(X,E1), eta(Y,E2), E1 = E2 + 3.
+etaDoppia(X,Y) :- eta(X,E1), eta(Y,E2), E1 = E2 * 2.
+:- cognome(X,avorio), not unAnnoPiuGrande(marco, X).
+:- cognome(X,avorio), not unAnnoPiuGrande(X, ester).
+:- cognome(X,rossi), not treAnniPiuGrande(X, margherita).
+:- cognome(X,neri), not etaDoppia(otto,X).

@@ -19,7 +19,8 @@ c(3,4). a(2). b(3). a(3). c(2,2).
 
 
 
-c(3,4). a(2). b(3). a(3). b(2).                      % lo posso cancellare perche' non e' supportato b(2)
+c(3,4). a(2). b(3). a(3). b(2).                      % lo posso cancellare perche' non e' supportato b(2)-->prendo l'atomo da verificare e vedo se e' in testa ad una regola con corpo vero
+
 
 
 %%%%%%%%%%%%%

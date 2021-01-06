@@ -1,0 +1,54 @@
+Programma:
+
+a(3,10).	a(1,2).
+e(1).
+f(1).		f(2).
+
+d(X,Y) 	:- 	f(Z), e(Y), X = Z + 1, X < 4.
+e(X) 	:- 	d(X,Y), not a (Y,X).
+
+
+Risultato dell'applicazione dell'operatore TP:
+
+{a(1,2), a(3,10), f(1), f(2), e(1), e(2), e(3), d(2,1), d(2,2), d(2,3), d(3,1), d(3,2), d(3,3)}
+
+==
+
+Aggiungendo la regola: 
+
+g(X)  v  h(X)  :-  d( _ ,Y), e(X), not d(X, Y).
+
+gli answer set sono:
+
+{a(1,2), a(3,10), f(1), f(2), e(1), e(2), e(3), d(2,1), d(2,2), d(2,3), d(3,1), d(3,2), d(3,3), h(1)}
+
+{a(1,2), a(3,10), f(1), f(2), e(1), e(2), e(3), d(2,1), d(2,2), d(2,3), d(3,1), d(3,2), d(3,3), g(1)}
+
+==
+
+Aggiungendo il weak constraint:
+
+:~  h(X). 	[X:X]
+
+gli answer set com i relativi costi sono:
+
+{a(1,2), a(3,10), f(1), f(2), e(1), e(2), e(3), d(2,1), d(2,2), d(2,3), d(3,1), d(3,2), d(3,3), g(1)}
+Cost ([Weight:Level]): <[0:1]>
+
+{a(1,2), a(3,10), f(1), f(2), e(1), e(2), e(3), d(2,1), d(2,2), d(2,3), d(3,1), d(3,2), d(3,3), h(1)}
+Cost ([Weight:Level]): <[1:1]>
+
+e l'ottimo e' il primo dei due.
+
+==
+
+Aggiungendo lo strong constraint:
+
+:- e(X), g(X).
+
+resta un solo answer set:
+
+{a(1,2), a(3,10), f(1), f(2), e(1), e(2), e(3), d(2,1), d(2,2), d(2,3), d(3,1), d(3,2), d(3,3), h(1)}
+Cost ([Weight:Level]): <[1:1]>
+
+che risulta cosi' essere quello ottimo. Infatti il primo dei due answer set non e' piu' un modello, in quanto viola il constraint appena aggiunto.
