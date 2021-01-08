@@ -1,23 +1,27 @@
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      ESERCIZIO 1      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 a(Z) :- c(Z,Y), not b(Y), Y=Z+1.
-c(Y,Z):- a(Y), b(Z), not a(Z).
+c(Y,Z) :- a(Y), b(Z), not a(Z).
 c(Y,Y) | b(Y) :- a(Y), not b(Y).
 c(3,4).
 a(2).
 b(3).
 
 a(3).                               % c(3,4), not b(4)
-%c(2,3) :- not a(3).                             % a(2),b(3),
+                                    %c(2,3) :- not a(3).                             % a(2),b(3),       %corpo falso --> sempre verificata
 c(2,2) | b(2) :- not b(2).                      % a(2), 
 
 
+a(2):-c(2,3), not b(3).            %corpo falso --> sempre verificata
+c(3,3):-a(3),b(3), not a(3).       %corpo falso --> sempre verificata
+c(2,3):-a(2),b(3),not a(3).        %corpo falso --> sempre verificata
+c(2,2):-a(2),b(2),not a(2).        %corpo falso --> sempre verificata
+c(3,2):-a(3),b(2),not a(2).        %corpo falso --> sempre verificata
+
+c(3,3) | b(3) :-a(3), not b(3).    %corpo falso --> sempre verificata
+
 
 c(3,4). a(2). b(3). a(3). c(2,2). 
-
-
 
 c(3,4). a(2). b(3). a(3). b(2).                      % lo posso cancellare perche' non e' supportato b(2)-->prendo l'atomo da verificare e vedo se e' in testa ad una regola con corpo vero
 
@@ -28,7 +32,10 @@ c(3,4). a(2). b(3). a(3). b(2).                      % lo posso cancellare perch
 %%%%%%%%%%%%%
 
 :- #count{X:b(X), not a(X)}<2.
+c(3,4). a(2). b(3). a(3). c(2,2). 
+
 % :- non voglio che 1<2
+--> INCONSITSTENTE
 
 
 
@@ -132,39 +139,21 @@ A4: {girasole(1,4), girasole(2,4), girasole(1,3), girasole(2,3), girasole(1,1), 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%      ESERCIZIO 2      %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-playerTotal(1..10).
-force(1..3).
-sex(1..2).
-team(1..3).
-
-player(X,Y,Z) | notPlayer(X,Y,Z):-playerTotal(X),sex(Y),force(Z).
-:-player(X,Y,Z),player(X,Y1,Z),Y!=Y1.
-:-player(X,Y,Z),player(X,Y1,Z1),Z!=Z1.
-
-
 • Ogni giocatore deve essere assegnato ad una squadra. Il numero di squadre massimo è noto
 all’inizio. Si tenga presente che il numero di squadre create può essere minore di quello
 massimo (cioè non tutte le squadre devono per forza avere dei giocatori assegnati, mentre
 ogni giocatore deve finire esattamente in una squadra).
-assign(X,T) | notAssign(X,T) :- player(X,_,_), team(T).
-:- assign(X,T),assign(X,T2),T!=T2.
 
 %tutti i giocatori devono giocare
-assigned(P):-assign(P,_), player(P,_,_).
-:- assign(P,T), not assigned(P).
-
 
 
 • Se un team non è vuoto, allora deve contenere giocatori di entrambi i sessi.
-bothGender(T) :- team(T), player(P1, 1 ,_), player(P2,2,_), assigned(P1,T), assigned(P2,T).
-:-#count{P:assign(P,T)}>1, team(T), not bothGender(T).
 
 
 
 • Un primo desiderio, il meno importante di tutti, è che la forza complessiva (cioè la somma
 delle forze di ciascun membro) delle squadre sia bilanciata. In altri termini, date le forze
 complessive di due qualunque tra le squadre formate, se ne vuole minimizzare la differenza.
-:~
 
 
 • La formula dell’allenamento prevede che ciascun team giochi esattamente contro un altro,
@@ -226,13 +215,13 @@ c(f(Y),f(Z)):- a(Y), a(Z).
 
 c(1,f(1)). b(f(1)). b(1).
 
-a(1).                   %:- c(1,f(1)), b(1)
-c(f(1),f(1)).           % :- a(1),a(1)
+a(1).                       % :- c(1,f(1)), b(1).
+c(f(1),f(1)).               % :- a(1), a(1).
+a(f(1)).                    % :-c(f(1),f(1)), b(f(1)).
+c(f(f(1)),f(f(1))).         % :-a(f(1)),a(f(1)).
 
-a(f(1)).                % :- c(f(1),f(1)), b(f(1))
-c(f(f(1)),f(1)).        % :- a(f(1)), a(1)
-c(f(1),f(f(1))).        % :- a(1), a(f(1))
-c(f(f(1)),f(f(1))).     % :- a(f(1)), a(f(1))
+c(f(1), f(f(1))).           % :-a(1),a(f(1)).
+c(f(f(1)), f(1)).           % :-a(f(1)),a(1).
 
 
-c(1,f(1)). b(f(1)). b(1). a(f(1)). c(f(f(1)),f(1)). c(f(1),f(f(1))). c(f(f(1)),f(f(1))).
+c(1,f(1)). b(f(1)). b(1). c(f(f(1)),f(f(1))). a(f(1)). c(f(1),f(1)). a(1). c(f(1), f(f(1))). c(f(f(1)), f(1)).
