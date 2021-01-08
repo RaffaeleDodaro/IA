@@ -2,43 +2,72 @@ ionio(L,M) :- tirreno(M,L), spiaggia(M), spiaggia(L), L>2.
 ionio(L,M) | tirreno(L,M) :- spiaggia(L), spiaggia(M).
 spiaggia(2). spiaggia(3). 
 
-PRIMO PUNTO
-ionio(2,2)|tirreno(2,2).            % :-spiaggia(2),spiaggia(2).
-ionio(2,3)|tirreno(2,3).            % :-spiaggia(2),spiaggia(3).
-ionio(3,2)|tirreno(3,2).            % :-spiaggia(3),spiaggia(2).
-ionio(3,3)|tirreno(3,3).            % :-spiaggia(3),spiaggia(3).
+ionio(2,2) | tirreno(2,2).                      % :- spiaggia(2), spiaggia(2).
+ionio(3,3) | tirreno(3,3).                      % :- spiaggia(3), spiaggia(3).
+ionio(2,3) | tirreno(2,3).                      % :- spiaggia(2), spiaggia(3).
+ionio(3,2) | tirreno(3,2).                      % :- spiaggia(3), spiaggia(2).
+ionio(3,2) :- tirreno(2,3).                     % , spiaggia(2), spiaggia(3).
+ionio(3,3) :- tirreno(3,3).                     % , spiaggia(3), spiaggia(3).
 
-ionio(3,2).                         % :- tirreno(2,3), spiaggia(2), spiaggia(3).
-ionio(3,3).                         % :- tirreno(3,3), spiaggia(3), spiaggia(3).
+spiaggia(2). spiaggia(3). ionio(2,2). ionio(3,3). ionio(2,3). ionio(3,2).
+spiaggia(2). spiaggia(3). tirreno(2,2). tirreno(3,3). ionio(3,3). tirreno(2,3). ionio(3,2).
 
-(1) vedere se programma e' stratificato o no. basta vedere se c'e' un not
-che e' all'interno di un ciclo. possiamo capire che e' stratificato o meno 
-disegnando il grafo delle dipendenze. questo esercizio e' stratificato 
+spiaggia(2). spiaggia(3).ionio(2,2).tirreno(3,3).ionio(3,3).tirreno(2,3). ionio(3,2).
 
-(2) partiamo ad istanziare le regole in cui ci sono fatti positivi all'interno
+                                                                            ionio(3,2)          *
+                                                            ionio(2,3)
+                                                                            tirreno(3,2)        *
+                                            ionio(3,3)
+                                                                            ionio(3,2)          *
+                                                            tirreno(2,3)
+                                                                            tirreno(3,2),ionio(3,2)     !NON MINIMALE
+                            ionio(2,2)
+                                                                            ionio(3,2),ionio(3,3)              !NON MINIMALE
+                                                            ionio(2,3)
+                                                                            tirreno(3,2), ionio(3,3)    !NON MINIMALE
+                                            tirreno(3,3)                    
+                                                                            ionio(3,2), ionio(3,3)       !NON MINIMALE
+                                                            tirreno(2,3)
+                                                                            tirreno(3,2),ionio(3,2),ionio(3,3) !NON MINIMALE
+spiaggia(2). spiaggia(3). 
 
-(3) quando vado a semplificare e ci sono fatti negativi nella regola devo stare attento
-e devo vedere se sono anche teste di altre regole. se sono teste non le devo semplificare
-perche potrebbe darsi che da qualche regola mi potrebbero uscire i fatti che sono negati
-e per il momento rimangono indefiniti e non li tocco
-
-(4) istanziare prima le regole NON ricorsive
 
 
+                                                                            ionio(3,2)
+                                                            ionio(2,3)
+                                                                            tirreno(3,2)
+                                            ionio(3,3)
+                                                                            ionio(3,2)
+                                                            tirreno(2,3)
+                                                                            tirreno(3,2)
+
+                                                                            ionio(3,2)
+                                                            ionio(2,3)
+                                                                            tirreno(3,2)
+                            tirreno(2,2)
+                                                                            ionio(3,2)
+                                                            tirreno(2,3)
+                                                                            tirreno(3,2)
+
+                                                                            ionio(3,2)
+                                                            ionio(2,3)
+                                                                            tirreno(3,2)
+                                            tirreno(3,3)
+                                                                            ionio(3,2)
+                                                            tirreno(2,3)
+                                                                            tirreno(3,2)
 
 
 
 
 
-spiaggia(2). spiaggia(3). + ionio(3,3). ionio(3,2). ionio(2,2). ionio(2,3).
-spiaggia(2). spiaggia(3). + ionio(3,3). ionio(3,2). tirreno(2,2). tirreno(2,3). 
-spiaggia(2). spiaggia(3). + ionio(3,3). ionio(3,2). ionio(2,2). tirreno(2,3).
-spiaggia(2). spiaggia(3). + ionio(3,3). ionio(3,2). tirreno(2,2). ionio(2,3). 
+spiaggia(2). spiaggia(3).ionio(2,2).ionio(3,3). ionio(2,3). ionio(3,2)                      CORRETTO
+spiaggia(2). spiaggia(3).ionio(2,2).ionio(3,3). tirreno(2,3). ionio(3,2)                    CORRETTO
+spiaggia(2). spiaggia(3).ionio(2,2).ionio(3,3). ionio(2,3). tirreno(3,2)                    CORRETTO
 
-ANSWER
-spiaggia(2). spiaggia(3). ionio(2,2). ionio(2,3). tirreno(3,2). ionio(3,3).
-ANSWER
-spiaggia(2). spiaggia(3). tirreno(2,2). ionio(2,3). tirreno(3,2). ionio(3,3).
+
+
+
 
 :- #max{ W : tirreno(W,Z) } = M, #count {X,Y : ionio(X,Y)} > M, spiaggia(M).
 
