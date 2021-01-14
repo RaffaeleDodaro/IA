@@ -11,7 +11,7 @@ A4: {​​alpi(2), alpi(3), cervino(1,2), cervino(3,2), alpi(1), bianco(2), ros
 :~ alpi(X), alpi(Y), X>Y, not cervino(X,Y). [X@1, X,Y]
 
 sol:
-//conviene andare a guardare direttamente quali sono i constraint ch3e sono violati
+//conviene andare a guardare direttamente quali sono i constraint che sono violati
 
 primo constraints: 
 :~ cervino(3,1), 3=1

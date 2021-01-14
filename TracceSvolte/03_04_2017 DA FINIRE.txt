@@ -1,0 +1,132 @@
+pollo(X) | limone(X) :- finocchio(X), not mela(X). 
+mela(X) :- finocchio(X), not pollo(X). 
+finocchio(X) :- pistacchio(X,Y), mela(Y). 
+
+mela(1). 
+finocchio(3). 
+pistacchio(2,3). 
+pistacchio(4,2). 
+pollo(4).
+
+pollo(3) | limone(3) :- not mela(3).        % finocchio(3), 
+mela(3) :- not pollo(3).                    % finocchio(3), 
+finocchio(2) :- mela(3).                    % pistacchio(2,3),
+finocchio(4) :- mela(2).                    % pistacchio(4,2), 
+
+pollo(2) | limone(2) :- finocchio(2), not mela(2).
+                                            % pollo(4) | limone(4) :- finocchio(4), not mela(4).
+
+mela(2) :- finocchio(2), not pollo(2). 
+                                            %mela(4) :- finocchio(4), not pollo(4). 
+
+
+ 
+                                                                                            pollo(2)    *
+                                                                    mela(3),finocchio(2)                
+                                                                                                        mela(2),finocchio(4)    * --> no min
+                                                                                            limone(2)   
+                                                                                                        pollo(2)    * --> no min
+                                                                                            
+                                                                                            mela(2),finocchio(4) * 
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4).
+                                                                    pollo(3)    *
+
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). pollo(2).
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). mela(2). finocchio(4).
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). pollo(3).
+
+%E' CICLICO. NON MI BASTA IL SUPPORTO --> VEDO IL RIDOTTO
+
+
+
+RIDOTTO:
+TRA TUTTE LE REGOLE BISOGNA CANCELLARE O I LETTERALI NEGATIVI
+VERI O CANCELLARE LE REGOLE IN CUI HO LETTERALI NEGATIVI FALSI
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). pollo(3).
+
+pollo(3) | limone(3).                       %  :- not mela(3) NON C'è MELA E LO CANCELLO
+                                            % mela(3) :- not pollo(3). CANCELLO REGOLA PERCHè HO POLLO(3)
+finocchio(2) :- mela(3).
+finocchio(4) :- mela(2).
+pollo(2) | limone(2) :- finocchio(2).       % , not mela(2). COME SOPRA
+mela(2) :- finocchio(2).                    % not pollo(2). COME SOPRA
+
+
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). pollo(2).
+
+                                % pollo(3) | limone(3) :- not mela(3). CANCELLO REGOLA PERCHè HO MELA(3)
+mela(3).                        % :- not pollo(3). CANCELLO PERCHè è VERO CHE NON HO POLLO(3)
+finocchio(2) :- mela(3).
+finocchio(4) :- mela(2).
+pollo(2) | limone(2) :- finocchio(2).           %, not mela(2) CANCELLO PERCHè è VERO CHE NON HO MELA(2)
+                                % mela(2) :- finocchio(2), not pollo(2). CANCELLO REGOLA PERCHè HO POLLO(2)
+
+
+
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). mela(2). finocchio(4).
+
+                                            % pollo(3) | limone(3) :- not mela(3). CANCELLO REGOLA PERCHè HO MELA(3)
+mela(3).                                    % :- not pollo(3). CANCELLO PERCHè è VERO CHE NON HO POLLO(3)
+finocchio(2) :- mela(3).
+finocchio(4) :- mela(2).
+                                            % pollo(2) | limone(2) :- finocchio(2), not mela(2). CANCELLO REGOLA PERCHè HO MELA(2)
+mela(2) :- finocchio(2).                    %, not pollo(2). CANCELLO PERCHè è VERO CHE NON HO POLLO(2)
+
+
+
+%%%%%%%%%%%%%%
+%    PTO2    %
+%%%%%%%%%%%%%%
+:~ pollo(X), finocchio(X). [1@X] 
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). mela(2). finocchio(4).
+:~ pollo(4),finocchio(4).[1@4]
+
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). pollo(2).     %BEST
+:~ pollo(2),finocchio(2).[1@2]
+
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). pollo(3).
+:~ pollo(3),finocchio(3).[1@3]
+
+
+
+%%%%%%%%%%%%%%
+%    PTO3    %
+%%%%%%%%%%%%%%
+:~mela(X), not limone(X). [2@X] 
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). mela(2). finocchio(4).
+:~mela(1), not limone(1). [2@1] 
+:~mela(3), not limone(3). [2@3] 
+:~mela(2), not limone(2). [2@2] 
+
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). pollo(2).
+:~mela(1), not limone(1). [2@1]
+:~mela(3), not limone(3). [2@3] 
+
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). pollo(3).        %BEST
+:~mela(1), not limone(1). [2@1] 
+
+
+%%%%%%%%%%%%%%
+%    PTO4    %
+%%%%%%%%%%%%%%
+:- pollo(Y), #sum{X: pistacchio(Y,X), finocchio(X)}<2.
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). mela(2). finocchio(4).    %RIMANE
+:- pollo(4), #sum{X: pistacchio(4,2), finocchio(2)}<2.      2<2
+
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). finocchio(2). pollo(2).     %RIMANE         BEST
+:- pollo(4), #sum{X: pistacchio(4,2), finocchio(2)}<2.      2<2
+:- pollo(2), #sum{X: pistacchio(2,3), finocchio(3)}<2.      3<2
+
+mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). pollo(3).  %SE NE VA
