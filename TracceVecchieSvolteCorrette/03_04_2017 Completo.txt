@@ -130,3 +130,35 @@ mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). mela(3). fino
 :- pollo(2), #sum{X: pistacchio(2,3), finocchio(3)}<2.      3<2
 
 mela(1). finocchio(3). pistacchio(2,3). pistacchio(4,2). pollo(4). pollo(3).  %SE NE VA
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%       ES2             %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+Scrivere un programma ASP che, dati in input:  •un grafo orientato aciclico G=<V,E>; 
+• una funzione di costo che assegni un valore intero positivo a ciascun arco in E; 
+• due  sottoinsiemi  S  e D  di V, rispettivamente  indicati  come  sorgenti  e  destinazioni, tali  che
+    a  ciascun  elemento  di  S  corrisponda  un  elemento  in  D,  e  viceversa  (quindi  sono individuate
+    coppie sorgente-destinazione);
+
+individui  un  sottoinsieme  E’  degli  archi  in  E  tale  che  ogni
+coppia  sorgente-destinazione risulti  CONNESSA  in  E’  (in  altre  parole,  per  ogni  coppia
+di  nodi  sorgente-destinazione <s,d> deve esistere un cammino da s a d composto da archi contenuti in E’).
+Si vuole inoltre minimizzare il peso totale del sottoinsieme (cioè la somma dei pesi degli archi in E’).
+
+Modello dei dati in input:
+node(X)  <-     i nodi del grafo
+arc(X,Y,W)  <-     gli archi con i rispettivi pesi
+source(S,Pos)  <-     il nodo “S” è la sorgente numero “Pos”
+destination(D,Pos)  <-      il nodo “D” è la destinazione numero “Pos” (una  sorgente ed una destinazione
+                            sono accoppiati se hanno la stessa posizione)
+
+node(1..5).
+arc(1,2,1). arc(1,5,6). arc(2,3,2). arc(3,4,4). arc(2,4,3). arc(4,5,5).    
+source(1, 1). source(3,3).
+destination(4,1). destination(5,3).
+
+startStop(X, Y) :- source(X,K), destination(Y,K).

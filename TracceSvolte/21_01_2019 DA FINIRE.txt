@@ -153,28 +153,37 @@ all’inizio. Si tenga presente che il numero di squadre create può essere mino
 massimo (cioè non tutte le squadre devono per forza avere dei giocatori assegnati, mentre
 ogni giocatore deve finire esattamente in una squadra).
 
-playerTeam(T,X)|noPlayerTeam(T,X) :- player(X,S,F), team(T).
-:- playerTeam(T1,X),playerTeam(T2,X),T1!=T2.
+id(1..10).
+sesso(1..2).
+forza(1..10).
+team(1..5).
 
-assegnato(G):- player(G,_,_), playerTeam(_,G).
-:- player(X,_,_), not assegnato(X).
+
+player(X,Y,Z) | notPlayer(X,Y,Z) :- id(X), sesso(Y), forza(Z).
+:-player(X,Y,Z), player(H,J,K), id(X),sesso(Y),forza(Z),X==H,Y!=J,Z!=K.
+
+inTeam(P,T)| notInTeam(P,T):-player(P,Y,Z),team(T).
+:-inTeam(P,X), inTeam(P,Y), X!=Y.
+
+isAssigned(P) :- player(P,Y,Z),inTeam(P,_).
+:-player(P,_,_), not isAssigned(P).
 
 
 • Se un team non è vuoto, allora deve contenere giocatori di entrambi i sessi.
-entrambiSessi(T):-team(T), playerTeam(T,P1),playerTeam(T,P2), player(P1,1,_),player(P2,2,_).
-:-#count{X:playerTeam(T,X)} > 1, team(T), not entrambiSessi(T).
-
+entrambiSessi(T):-inTeam(P1,T),inTeam(P2,T), player(P1,1,F1),player(P2,2,F2), team(T).
+:-#count{P:inTeam(P,T)}>1,team(T), not entrambiSessi(T).
 
 • Un primo desiderio, il meno importante di tutti, è che la forza complessiva (cioè la somma
 delle forze di ciascun membro) delle squadre sia bilanciata. In altri termini, date le forze
 complessive di due qualunque tra le squadre formate, se ne vuole minimizzare la differenza.
-:~ 
+forzaTotale(T,K):team(T),#sum{F1,T:player(P1,_,F1), inTeam(P1,T)}=K.
+
 
 • La formula dell’allenamento prevede che ciascun team giochi esattamente contro un altro,
 e che i tutti membri di un team giochino contro tutti quelli del team accoppiato. Si devono
 pertanto stabilire gli accoppiamenti tra i team.
-gioca(T1,T2)|nonGioca(T1,T2):-team(T1),team(T2),T1!=T2.
-:-gioca(T1,T2),gioca(T1,T3), T2!=T3.
+play(T1,T2)|notPlay(T1,T2):-team(T1),team(T2),T1!=T2.
+:-play(T1,T2),play(T1,T3), T2!=T3.
 
 
 • Sono note delle statistiche calcolate sullo storico degli allenamenti nel circolo; in particolare,
@@ -193,9 +202,15 @@ uno dei giocatori non ha mai battuto l’altro).
 • Nello stabilire gli accoppiamenti:
         o la cosa più importante è massimizzare il numero di incontri che si verificheranno tra
         giocatori che non si sono mai incontrati prima;
+        match(A,B):-played(A,B).
+        match(A,B):-match(B,A).
+        noIncontri(A,B):-player(A,_,_),player(B,_,_), not match(A,B), A!=B.
+
+
+
         o se due giocatori che dovranno giocare a causa dell’accoppiamento tra i team si sono
         già incontrati in precedenza, si vuole minimizzare la differenza tra le mutue vittorie.
-
+        vittorie(A,B,C):- played(A,B,C1), played(A,B,C2), C=C1-C2.
 
 
 • Al fine di arricchire le statistiche, si desidera inoltre calcolare il numero totale di incontri
@@ -210,14 +225,6 @@ Modello dei dati in input
     team(ID)  I possibili team che si possono comporre
     played(P1,P2,NWin)  Le informazioni su incontri precedenti tra i giocatori del circolo
 
-id(1..10).  gender(1..2). strength(1..10). team(1..5).
-player(X,Y,Z) | noPlayer(X, Y, Z) :- id(X), gender(Y), strength(Z).
-:-player(X,Y,Z), player(X,C,V), Y!=C.
-:-player(X,Y,Z), player(X,C,V), V!=Z.
-
-
-%played(P1,P2,NWIN)|noPlayed(P1,P2,NWIN):-player(P1),player(P2),
-%:-played(P1,P2,NWIN), P1==P2.
 
 
 Modello dei dati in output

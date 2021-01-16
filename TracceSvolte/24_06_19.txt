@@ -22,7 +22,7 @@ spiaggia(2). spiaggia(3).ionio(2,2).tirreno(3,3).ionio(3,3).tirreno(2,3). ionio(
                                                             tirreno(2,3)
                                                                             tirreno(3,2),ionio(3,2)     !NON MINIMALE
                             ionio(2,2)
-                                                                            ionio(3,2),ionio(3,3)              !NON MINIMALE
+                                                                            ionio(3,2)              !NON MINIMALE
                                                             ionio(2,3)
                                                                             tirreno(3,2), ionio(3,3)    !NON MINIMALE
                                             tirreno(3,3)                    
@@ -33,31 +33,29 @@ spiaggia(2). spiaggia(3).
 
 
 
-                                                                            ionio(3,2)
+                                                                            ionio(3,2)      *
                                                             ionio(2,3)
-                                                                            tirreno(3,2)
+                                                                            tirreno(3,2)    *
                                             ionio(3,3)
-                                                                            ionio(3,2)
+                                                                            ionio(3,2)      *
                                                             tirreno(2,3)
-                                                                            tirreno(3,2)
+                                                                            tirreno(3,2), ionio(3,2)    *
 
-                                                                            ionio(3,2)
+                                                                            ionio(3,2)      *
                                                             ionio(2,3)
-                                                                            tirreno(3,2)
+                                                                            tirreno(3,2)    *
                             tirreno(2,2)
-                                                                            ionio(3,2)
+                                                                            ionio(3,2)      *
                                                             tirreno(2,3)
-                                                                            tirreno(3,2)
+                                                                            tirreno(3,2)    *
 
-                                                                            ionio(3,2)
+                                                                            ionio(3,2), ionio(3,3)  *
                                                             ionio(2,3)
-                                                                            tirreno(3,2)
+                                                                            tirreno(3,2)     *
                                             tirreno(3,3)
-                                                                            ionio(3,2)
+                                                                            ionio(3,2), ionio(3,3)   *
                                                             tirreno(2,3)
-                                                                            tirreno(3,2)
-
-
+                                                                            tirreno(3,2), ionio(3,3)  *
 
 
 
@@ -65,9 +63,12 @@ spiaggia(2). spiaggia(3).ionio(2,2).ionio(3,3). ionio(2,3). ionio(3,2)          
 spiaggia(2). spiaggia(3).ionio(2,2).ionio(3,3). tirreno(2,3). ionio(3,2)                    CORRETTO
 spiaggia(2). spiaggia(3).ionio(2,2).ionio(3,3). ionio(2,3). tirreno(3,2)                    CORRETTO
 
-
-
-
+ANSWER
+spiaggia(2). spiaggia(3). tirreno(2,2). ionio(2,3). ionio(3,2). ionio(3,3).
+ANSWER
+spiaggia(2). spiaggia(3). ionio(2,2). tirreno(2,3). ionio(3,2). ionio(3,3).
+ANSWER
+spiaggia(2). spiaggia(3). ionio(2,2). ionio(2,3). tirreno(3,2). ionio(3,3).
 
 :- #max{ W : tirreno(W,Z) } = M, #count {X,Y : ionio(X,Y)} > M, spiaggia(M).
 
@@ -158,22 +159,31 @@ invece, bocciare. L’assegnamento degli articoli (in gergo a volte chiamati “
 “paper”) ai revisori è un processo complicato e molto delicato. Ecco perché Elisabetta si è rivolta al
 suo amico Ciccio Pasticcio… e quindi a voi, cari studenti. Si scriva un programma logico ASP che
 risolva il problema dell’assegnamento, tenendo conto di quanto indicato di seguito.
+
+paper(ID).I paper
+reviewer(ID).I revisori
+firstchoice(R,P).Le prime scelte indicate dai revisori
+secondchoice(R,P).Le seconde scelte indicate dai revisori
+conflict(R,P).I conflitti di interesse dichiarati dai revisori
+range(Min,Max).Il numero min e max di paper assegnabili a ciascun revisore
+keyword(P,K).Le keyword per ciascun paper
+keyworkcovered(Reviewer,K).Le keyword “coperte” da ciascun revisore
+
+
+assign(R, P) | noAssign(R, P) :- paper(P), reviewer(R).
+
 • Ogni paper deve essere assegnato esattamente a 3 revisori
-reviewerPaper(R,P) :- paper(P), reviewer(R).
-:-paper(X), #count{Y: reviewerPaper(X,Y)}!=3, reviewerPaper(R,P).
-
-
+:-paper(X), #count{R:firstchoice(R,X)}!=3.
 
 • Ogni revisore può avere dei conflitti di interesse con qualche paper (ad esempio, se tra gli autori
 c’è un amico, od un collega); questi sono dichiarati in anticipo. Nessun paper può quindi essere
 assegnato ad un revisore che sia in conflitto con esso.
-:-paper(P), reviewer(R), conflict(R,P).
-
+:-conflict(R,P), assign(R,P).
 
 
 • Elisabetta definisce un numero minimo ed un numero massimo di paper assegnati a ciascun
 revisore; quindi, ogni revisore deve avere assegnati almeno “min” e al massimo “max” paper.
-
+:-#count{P: assign(R,P)}=K,reviewer(R),range(X,Y), K>=X, K>=Y.
 
 
 
@@ -183,14 +193,14 @@ revisionare un lavoro che tratti di argomenti su cui è poco ferrato). In partic
 revisore può specificare delle preferenze sui paper, indicando ciascun paper come “prima
 scelta” o “seconda scelta”, oppure non indicandolo affatto (in questo caso, il paper è “non
 scelto”). A ciascun revisore possono essere assegnati al massimo 2 paper non scelti da lui.
-
+:-reviewer(R), firstchoice(R,X), secondchoice(R,Y), X!=Y, #count{P:assign(R,M),M!=X,M!=Y}>2.
 
 
 • È molto importante, per ciascun revisore, massimizzare il numero di paper a lui assegnati e da
 lui indicati come prime scelte; meno importante, ma sempre preferibile, è anche massimizzare
 il numero di paper a lui assegnati e da lui indicati come seconde scelte.
-
-
+:tilde noAssign(R,P),firstchoice(R,P).[1@2, R, P]
+:tilde noAssign(R,P),secondchoice(R,P).[1@1, R, P]
 
 • Ogni paper è caratterizzato da una lista di “parole chiave” (o “keyword); queste indicano
 (orientativamente) gli argomenti scientifici in esso trattati. Ciascun revisore, inoltre, è
