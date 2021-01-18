@@ -1,0 +1,42 @@
+sbarco(Y) | nonSbarco(Y) :- nave(Y,Z), not porto(Y).
+porto(Y) :- nave(Y,X), not sbarco(Y).
+nave(X,Z) :- porto(X),  sbarco(Y), Z=X+Y.
+
+nave(1,2).
+nave(4,5).
+
+
+sbarco(1) | nonSbarco(1) :- not porto(1). % nave(1,2), 
+sbarco(4) | nonSbarco(4) :- not porto(4). % nave(4,5), 
+
+porto(1) :- not sbarco(1).      %nave(1,2), 
+porto(4) :- not sbarco(4).      %nave(4,5), 
+
+nave(1,2) :- porto(1),  sbarco(1), Z=X+Y.
+nave(1,5) :- porto(1),  sbarco(4), Z=X+Y.
+
+nave(4,5) :- porto(4),  sbarco(1), Z=X+Y.
+nave(4,8) :- porto(4),  sbarco(4), Z=X+Y.
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%
+%    ES3      %
+%%%%%%%%%%%%%%%
+ 
+q(g(X,Y,Z)):-p(X,Z,Y),not t(Z).
+p(X,f(X),f(X)):-q(X).
+t(X) :-t(f(X)).
+
+q(1).
+t(f(f(f(1)))).
+
+p(1,f(1),f(1)).     % :-q(1)
+t(f(f(1)).          % :-t(f(f(f(1)))
+t(f(1)).            % :-t(f(f(1)).
+t(1).

@@ -16,7 +16,7 @@ zeus(2,3).                           % mercurio(3), giunone(2),:-not apollo(3)
 mercurio(2).
 zeus(2,2):-not apollo(2).           % mercurio(2), giunone(2), 
 
-
+%%%% NON CICLICO. MI BASTA IL SUPPORTO
                                                                                         apollo(2)    *
 zeus(3,4). giunone(2). mercurio(4). mercurio(3). zeus(2,4). zeus(2,3). mercurio(2).
                                                                                         zeus(2,2)    *

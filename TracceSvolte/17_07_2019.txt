@@ -1,0 +1,114 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%       ES 1            %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+rubli(X,Y) | cremlino(Y) :-mosca(X,Y), not russia(Y,Y).
+russia(X,Y) :-vodka(X,Y,Z), vodka(_,_,Y), not mosca(X,Z).
+rubli(X,Y) :-russia(X,Z), Y=Z+2.
+
+vodka(1,1,1).
+vodka(1,2,3).
+vodka(1,3,4).
+mosca(1,1).
+cremlino(3).
+
+russia(1,3).                      % vodka(1,3,4),vodka(1,2,3), :- not mosca(1,4)
+rubli(1,1)|cremlino(1).           % mosca(1,1), :- not russia(1,1)
+rubli(1,5).                       % :-russia(1,3)
+
+
+
+vodka(1,1,1).vodka(1,2,3).vodka(1,3,4).mosca(1,1).cremlino(3). russia(1,3). rubli(1,5). rubli(1,1).
+vodka(1,1,1).vodka(1,2,3).vodka(1,3,4).mosca(1,1).cremlino(3). russia(1,3). rubli(1,5). cremlino(1).
+%%% SONO ENTRAMBI AS 
+
+
+:-#sum{ X : rubli(X,Y) } > 1.
+vodka(1,1,1).vodka(1,2,3).vodka(1,3,4).mosca(1,1).cremlino(3). russia(1,3). rubli(1,5). rubli(1,1).         % RIMANE
+vodka(1,1,1).vodka(1,2,3).vodka(1,3,4).mosca(1,1).cremlino(3). russia(1,3). rubli(1,5). cremlino(1).        % RIMANE
+
+
+
+%%%%%% punto b
+A1: {aglio(3), aglio(4), lupomannaro(3), aglio(2), zombie(4), zombie(2)}
+A2: {aglio(3), aglio(4), lupomannaro(3), aglio(2), lupomannaro(4), zombie(2)}
+A3: {aglio(3), aglio(4), lupomannaro(3), aglio(2), vampiro(4), zombie(2)}
+A4: {aglio(3), aglio(4), lupomannaro(3), aglio(2), lupomannaro(4), vampiro(2)}
+A5: {aglio(3), aglio(4), lupomannaro(3), aglio(2), vampiro(4), vampiro(2)}
+
+
+
+A1: {aglio(3), aglio(4), lupomannaro(3), aglio(2), zombie(4), zombie(2)}    [4@2]
+:~ zombie(4), zombie(2), 2<4. [ 4@2, 4,2]
+:~ aglio(X), vampiro(X). [X@2, X]       %NON PAGO
+:~ argento(X,Y), lupomannaro(X). [ 1@Y, X,Y ]   %NON PAGO
+
+
+
+A2: {aglio(3), aglio(4), lupomannaro(3), aglio(2), lupomannaro(4), zombie(2)}               %BEST
+:~ zombie(X), zombie(Y), Y<X. [ X@Y, X,Y]   %%%% NON PAGO
+
+:~ aglio(X), vampiro(X). [X@2, X]   %%%% NON PAGO
+
+:~ argento(X,Y), lupomannaro(X). [ 1@Y, X,Y ]   %%%% NON PAGO
+
+
+
+A3: {aglio(3), aglio(4), lupomannaro(3), aglio(2), vampiro(4), zombie(2)}   [4@2]
+:~ zombie(X), zombie(Y), Y<X. [ X@Y, X,Y]   %%%% NON PAGO
+
+:~ aglio(4), vampiro(4). [4@2, 4]
+
+:~ argento(X,Y), lupomannaro(X). [ 1@Y, X,Y ]   %%%% NON PAGO
+
+
+
+A4: {aglio(3), aglio(4), lupomannaro(3), aglio(2), lupomannaro(4), vampiro(2)}      [2@2]
+:~ zombie(X), zombie(Y), Y<X. [ X@Y, X,Y]   %%%% NON PAGO
+
+:~ aglio(2), vampiro(2). [2@2, 2]
+
+:~ argento(X,Y), lupomannaro(X). [ 1@Y, X,Y ]   %%%% NON PAGO
+
+
+
+A5: {aglio(3), aglio(4), lupomannaro(3), aglio(2), vampiro(4), vampiro(2)}      [6@2]
+:~ zombie(X), zombie(Y), Y<X. [ X@Y, X,Y]    %%%% NON PAGO
+
+:~ aglio(4), vampiro(4). [4@2, 4]
+:~ aglio(2), vampiro(2). [2@2, 2]
+
+:~ argento(X,Y), lupomannaro(X). [ 1@Y, X,Y ]    %%%% NON PAGO
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%       ES 2            %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%       ES 3            %
+%%%%%%%%%%%%%%%%%%%%%%%%%
+q(f(1),1).  p(f(1),1).  r(1).
+
+p(Y,X) :- q(X,Y).
+q(f(X),X) :- r(X).
+r(f(X)) :- p(X,f(Y)), r(X).
+
+p(1,f(1)).               % :-q(f(1),1)
+% q(f(1),1).             % :- r(1)
+r(f(1)).                 % :-p(1,f(1)),r(1)
+
+q(f(f(1)),f(1)).         % :-r(f(1))
+
+p(f(1),f(f(1))).         % :- q(f(f(1)),f(1))
+
+.
+.
+.
+%ILLIMITATO
