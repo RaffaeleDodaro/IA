@@ -1,0 +1,44 @@
+allegro(Y,Y) | vacanza(Y,Y) :- mare(Y), Y>2.
+allegro(X,Y) :-vacanza(Y,X), mare(X), X<3.
+vacanza(X,Y) :-allegro(X,Z), mare(Y), not mare(Z).
+
+% :-#sum{X:vacanza(X,Y)}>=7.
+
+mare(2).
+mare(3).
+mare(4).
+vacanza(1,2).
+
+allegro(3,3) | vacanza(3,3).                        % :-mare(3)
+allegro(4,4) | vacanza(4,4).                        % :-mare(4)
+allegro(2,1).                                       % :-vacanza(1,2), mare(2)
+
+
+vacanza(2,2).                          % allegro(2,1), mare(2),  :- not mare(1)
+vacanza(2,3).                          % allegro(2,1), mare(3),  :- not mare(1)
+vacanza(2,4).                          % allegro(2,1), mare(4),  :- not mare(1)
+
+allegro(2,2).                          % :-vacanza(2,2), mare(2)
+
+                                                        allegro(4,4)
+                                        allegro(3,3)
+                                                        vacanza(4,4)
+mare(2).mare(3).mare(4).vacanza(1,2).
+                                                        allegro(4,4)
+                                        vacanza(3,3)
+                                                        vacanza(4,4)
+
+mare(2).mare(3).mare(4).vacanza(1,2).allegro(3,3).allegro(4,4). allegro(2,1). allegro(2,2).vacanza(2,4).vacanza(2,3).vacanza(2,2). 
+mare(2).mare(3).mare(4).vacanza(1,2).allegro(3,3).vacanza(4,4). allegro(2,1). allegro(2,2).vacanza(2,4).vacanza(2,3).vacanza(2,2). 
+mare(2).mare(3).mare(4).vacanza(1,2).vacanza(3,3).allegro(4,4). allegro(2,1). allegro(2,2).vacanza(2,4).vacanza(2,3).vacanza(2,2). 
+mare(2).mare(3).mare(4).vacanza(1,2).vacanza(3,3).vacanza(4,4). allegro(2,1). allegro(2,2).vacanza(2,4).vacanza(2,3).vacanza(2,2). 
+
+:-#sum{X:vacanza(X,Y)}>=7. %Y cambia sempre, non rimane fissa
+
+% primo as X=5
+% secondo X>=7
+% terzo as X=6
+% quarto as X>8
+
+mare(2).mare(3).mare(4).vacanza(1,2).allegro(3,3).allegro(4,4). allegro(2,1). allegro(2,2).vacanza(2,4).vacanza(2,3).vacanza(2,2). 
+mare(2).mare(3).mare(4).vacanza(1,2).vacanza(3,3).allegro(4,4). allegro(2,1). allegro(2,2).vacanza(2,4).vacanza(2,3).vacanza(2,2). 

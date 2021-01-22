@@ -1,0 +1,48 @@
+culla(Y):- bambino(Y), not piange(Y,Y).
+culla(Y) :- piange(Y,X), bambino(X), Y=X - 1.
+piange(X,X) :- bambino(X), not latte(Y), not culla(X), Y=X + 1.
+piange(X,Y):- culla(X), culla(Y), not latte(X).
+
+piange(1,2).bambino(2).bambino(3). latte(2).
+
+culla(2) :- not piange(2,2).             % bambino(2),
+culla(3) :- not piange(3,3).             % bambino(3), 
+culla(1).                  % piange(1,2),  :- bambino(2)
+piange(2,2) :- not culla(2).      % bambino(2), 
+piange(3,3) :- not culla(3).      % bambino(3), 
+piange(3,2) :- culla(3), culla(2).              %, not latte(3)
+piange(3,3) :- culla(3), culla(3).              % , not latte(3)
+piange(1,3) :- culla(1), culla(3).              %, not latte(2)
+piange(3,1) :- culla(3), culla(1).              % , not latte(3)
+                %piange(1,2) :- bambino(1), not latte(2), not culla(1), Y=X + 1.
+piange(1,1).                     % culla(1), culla(1), :- not latte(1).
+        
+                                                                                    culla(3),piange(3,2),piange(3,3),piange(1,3),piange(3,1)
+                                                                        culla(2) 
+                                                                                    piange(3,3) *
+                                                            
+piange(1,2).bambino(2).bambino(3). latte(2). culla(1). piange(1,1).
+                                                                                        culla(3), piange(3,3), piange(1,3), piange(3,1)
+
+                                                                        piange(2,2)
+
+                                                                                        piange(3,3) *
+
+
+
+piange(1,2).bambino(2).bambino(3). latte(2). culla(1). piange(1,1). culla(2). piange(3,3)
+piange(1,2).bambino(2).bambino(3). latte(2). culla(1). piange(1,1). piange(2,2). piange(3,3).
+
+culla(2) :- not piange(2,2).
+culla(3) :- not piange(3,3).
+piange(2,2) :- not culla(2). 
+piange(3,3) :- not culla(3). 
+piange(3,2) :- culla(3), culla(2).
+piange(3,3) :- culla(3), culla(3).
+piange(1,3) :- culla(1), culla(3).
+piange(3,1) :- culla(3), culla(1).
+
+
+%NON CICLICO, MI BASTA IL SUPPORTO
+piange(1,2).bambino(2).bambino(3). latte(2). culla(1). piange(1,1). culla(2). piange(3,3)
+piange(1,2).bambino(2).bambino(3). latte(2). culla(1). piange(1,1). piange(2,2). piange(3,3).
