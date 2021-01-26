@@ -1,0 +1,106 @@
+granite(X) | granate(X,Y) :- lasciate(X), speranze(X,Y). 
+speranze(X,Y) :- entrate(X,Y), state(Y), not e(X). 
+e(X) :- speranze(_,X), not granite(X). 
+granite(X) :- state(X), not e(X). 
+
+state(2). state(3). 
+lasciate(3). 
+entrate(1,2). entrate(1,3).
+
+speranze(1,2).                                  % entrate(1,2), state(2),  :- not e(1)
+speranze(1,3).                                  % entrate(1,3), state(3),  :- not e(1)
+e(3) :- speranze(_,3), not granite(3).
+e(2) :- speranze(_,2), not granite(2). 
+granite(2) :- not e(2).                                     % state(2),
+granite(3) :- not e(3).                                     % state(3), 
+
+                                                                                                        e(3)    *
+                                                                                            granite(2)              
+                                                                                                                    
+                                                                                                        granite(3)  *
+                                                                                                                    
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). 
+                                                                                                        e(3)    *
+                                                                                            e(2)
+                                                                                                        granite(3)  *
+
+
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). granite(2). e(3).
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). granite(2). granite(3).
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). e(2). e(3).
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). e(2). granite(3).
+
+NON CICLICO. USO IL SUPPORTO
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). granite(2). e(3). %AS
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). granite(2). granite(3). %AS
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). e(2). e(3).  %AS
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). e(2). granite(3).  %AS
+
+
+b) Si immagini ora che si debba vietare di avere più di una granita. Si modifichi adeguatamente il programma in modo 
+che abbia answer set conformi a quanto specificato
+
+:-#count{X:granite(X)}>1.
+
+
+
+c)
+:~ #sum { Y,X : speranze(X,Y), e(Y) } = N, entrate(Z,N). [ N : 1 ] 
+
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). granite(2). e(3).
+:~ #sum { Y,X : speranze(X,Y), e(Y) } = N, entrate(Z,N). [ N : 1 ] 
+3@1
+
+
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). granite(2). granite(3).
+:~ #sum { Y,X : speranze(X,Y), e(Y) } = N, entrate(Z,N). [ N : 1 ] 
+0@1
+
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). e(2). e(3).
+:~ #sum { Y,X : speranze(X,Y), e(Y) } = N, entrate(Z,N). [ N : 1 ] 
+0@1
+
+
+state(2). state(3). lasciate(3). entrate(1,2). entrate(1,3).speranze(1,2). speranze(1,3). e(2). granite(3).
+:~ #sum { Y,X : speranze(X,Y), e(Y) } = N, entrate(Z,N). [ N : 1 ] 
+2@1
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%       ES 2
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+Sia dato un grafo orientato G=<V,E>tale che gli archi in E siano pesati (pesi solo positivi), e che l’insieme
+dei nodi V sia tri-partito in tre sottoinsiemi A, B e C; i sottoinsiemi sono tali che tutti gli archi uscenti
+dai nodi in A incidono solo su nodi in B, e tutti gli archi uscenti dai nodi in B incidono solo su nodi in C.
+Il grafo è tale che da ogni nodo in A si può raggiungere qualunque nodo in C. Rimuovendo una parte dei nodi in B 
+(e quindi anche gli archi entranti/uscenti corrispondenti), si intende trovare un sotto-grafo di G che abbia 
+le seguenti caratteristiche: 
+•(condizione necessaria): la completa raggiungibilità da A a C è mantenuta;
+•(cosa più importante): la cardinalità di B è minima;
+•(cosa meno importante): massimizzare il peso degli archi che da B vanno in C.
+
+Modello dei dati in INPUT: 
+•node(X,I)      i nodi in V del grafo in input, dove I indica il gruppo (a,b o c) 
+•arc(X,Y,W)     gli archi in E del grafo in input, dove W indica il peso
+
+Modello dei dati in OUTPUT: 
+•keepNode(X,I )  i nodi da tenere
+•keepArc(X,Y,W)  gli archi da tenere
+•cardinalityOfB(X) il numero di nodi in B nel grafo ottenuto
+•totalGainBtoC(X) la somma totale dei pesi degli archi da B in C.
+
+
+node(1, 1). node(2, 1). node(3, 2). node(4, 2). node(5, 2). 
+node(7, 3). node(6, 3). 
+arc(1,3,1). arc(2,4,3). arc(2,5,2). arc(3,6,6). arc(3,7,6). arc(4,6,2). arc(4,7,2). arc(5,7,3). arc(5,6,3).
+
+keepNode(X,Y)|notKeepNode(X,Y):-node(X,Y).
+:-node(X,1),keepNode(X,Y),Y!=1.
+:-node(X,2),keepNode(X,Y),Y!=2.
+:-node(X,3),keepNode(X,Y),Y!=3.
+
+keepArc(X,Y,W):-arc(X,Y,Z).

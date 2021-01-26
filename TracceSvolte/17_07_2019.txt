@@ -23,7 +23,7 @@ vodka(1,1,1).vodka(1,2,3).vodka(1,3,4).mosca(1,1).cremlino(3). russia(1,3). rubl
 %%% SONO ENTRAMBI AS 
 
 
-:-#sum{ X : rubli(X,Y) } > 1.
+:-#sum{ X : rubli(X,Y) } > 1. % non vengono contati i duplicati di x
 vodka(1,1,1).vodka(1,2,3).vodka(1,3,4).mosca(1,1).cremlino(3). russia(1,3). rubli(1,5). rubli(1,1).         % RIMANE
 vodka(1,1,1).vodka(1,2,3).vodka(1,3,4).mosca(1,1).cremlino(3). russia(1,3). rubli(1,5). cremlino(1).        % RIMANE
 
@@ -94,44 +94,54 @@ gestire nel modo migliore l’uso delle strutture a seconda delle richieste di p
 (che, per fortuna!, arrivano numerose). Come al solito, tocca al nostro vecchio Ciccio Pasticcio intervenire
 per salvare la situazione... e quindi tocca anche a voi. Si scriva un programma logico ASP che stabilisca
 come allocare le richieste di una giornata, tenendo conto delle specifiche indicate di seguito.
-    •Nel complesso ci sono un certo numero di sale, ciascuna con la propria capienza,tutte disponibili
-    per l’arco della giornata (dall’inizio alla fine delle attività).
-    •A Renata ed Ernesta arrivano richieste di eventi, ciascuno di una certa tipologia, 
-    con un orario di inizio e fine e con un certo numero di persone coinvolte. Ciascun evento 
-    potrà essere accettato in una delle sale disponibili, oppure rifiutato.
-   •[c1] Un evento non può stare in due sale diverse!
+•Nel complesso ci sono un certo numero di sale, ciascuna con la propria capienza,tutte disponibili
+per l’arco della giornata (dall’inizio alla fine delle attività).
+•A Renata ed Ernesta arrivano richieste di eventi, ciascuno di una certa tipologia, 
+con un orario di inizio e fine e con un certo numero di persone coinvolte. Ciascun evento 
+potrà essere accettato in una delle sale disponibili, oppure rifiutato.
+•[c1] Un evento non può stare in due sale diverse!
 
-    eventoSala(ID,S)| notEventoSala(ID,S) :- evento(ID),sala(S).
-    :-eventoSala(ID,S1), eventoSala(ID,S2),S1!=S2.
+inizioMin(5).  fineMax(10). oreMax(5). 
+sala(1,10).sala(2,20).sala(3,30).sala(4,40).sala(5,50).
+
+eventoSala(E,S)| notEventoSala(E,S):- sala(S),evento(E,_,_,_,_).
+:-eventoSala(X,S),eventoSala(X,Y),Y!=S.
 
 
-   •[c2] Naturalmente, un evento non può essere assegnato ad una sala che non sia abbastanza capiente per ospitarlo.
-    :-eventoSala(ID,S), sala(S,C), evento(ID,_,_,P,_),C<P.
+•[c2] Naturalmente, un evento non può essere assegnato ad una sala che non sia abbastanza capiente per ospitarlo.
+:-evento(ID,_,_,P,_), eventoSala(ID,S), sala(S,P1),P1<P.
 
 
-   •[c3] Una sala non può ospitare contemporaneamente più di un evento, nemmeno se è abbastanza capiente;
-   pertanto si devono evitare sovrapposizioni (anche parziali) di eventi nella stessa sala.
-   sovrapposizioni(E,E1):-evento(E,I1,F1,_,_),evento(E1,I2,F2,_,_)....
-    :-eventoSala(E,S), eventoSala(E1,S), sovrapposizioni(E1,E).
+•[c3] Una sala non può ospitare contemporaneamente più di un evento, nemmeno se è abbastanza capiente;
+pertanto si devono evitare sovrapposizioni (anche parziali) di eventi nella stessa sala.
+sovrapposizioni(E1,E2) :- evento(E1,I1,F1,_,_), evento(E2,I2,F2,_,_), E1 < E2, I1 > F2.
+:-eventoSala(E,S), eventoSala(E1,S), sovrapposizioni(E,E1).
+
 
 
 •Ci sono poi dei criteri fondamentali per l’ottimizzazione dell’uso delle risorse; sono elencati di seguito, 
 IN ORDINE DI IMPORTANZA CRESCENTE:
-   o[w1] Si desidera minimizzare il numero di sale usate (cioè, se possibile, è preferibile lasciare una
-   sala completamente inutilizzata).
-    :tilde #count{S:eventoSala(ID,S)}=X.[X@1]           % pago per ogni sala occupata
+o[w1] Si desidera minimizzare il numero di sale usate (cioè, se possibile, è preferibile lasciare una
+sala completamente inutilizzata).
+:tilde #count{S:eventoSala(E,S)}=X.[X@1]
 
-   o[w2] Se una sala è utilizzata è meglio che lo sia al massimo; pertanto, si vogliono ridurre,
-   per ogni sala usata, i tempi in cui non è ospitato alcun evento.
-    :tilde 
+o[w2] Se una sala è utilizzata è meglio che lo sia al massimo; pertanto, si vogliono ridurre,
+per ogni sala usata, i tempi in cui non è ospitato alcun evento.
+:~ eventoSala(ID, S), #sum{O : evento(ID, I, F, P, T), O = F - I} = Y, K = X - Y, oraMax(X). [K@2, X, K, Y]
 
-   o[w3] Per ovvi motivi, è più facile chiudere un evento e prepararsi ad ospitare il
-   successivo se questi sono dello stesso tipo. Pertanto, si vogliono minimizzare gli eventi
-   di tipo diverso ospitati in una stessa sala.
-    :tilde #count{T:evento(ID,_,_,_,T)}=Y, eventoSala(ID,S). [Y@3]
 
-   o[w4] Il profitto: vogliamo massimizzare il numero totale di persone ospitate. 
-    :tilde #sum{P,ID : evento(ID,_,_,_,P,_), notEventoSala(ID,_)}=Z. [Z@4]     
+
+
+
+o[w3] Per ovvi motivi, è più facile chiudere un evento e prepararsi ad ospitare il
+successivo se questi sono dello stesso tipo. Pertanto, si vogliono minimizzare gli eventi
+di tipo diverso ospitati in una stessa sala.
+:~ #count{T : evento(ID, I, F, P, T)} = X, eventoSala(ID, S). [X@3, X, ID, S]
+
+
+
+o[w4] Il profitto: vogliamo massimizzare il numero totale di persone ospitate.
+:tilde #sum{P,E:evento(E,_,_,P,_), notEventoSala(E,S)}=X.
 
 inizioMin(5).  fineMax(10). oreMax(5). 
 sala(1,10).sala(2,20).sala(3,30).sala(4,40).sala(5,50).
