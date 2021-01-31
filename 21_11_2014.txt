@@ -24,7 +24,7 @@ alcuni(1) :- tanti(2), pochi(1).                        % , not nessuno(1,2)
 
                                                                         pochi(2),alcuni(2) NON MIN 
 
-                                                                        alcuni(1) *
+                                                                        alcuni(2) *
 
                                                         tanti(5)
 
@@ -36,6 +36,8 @@ alcuni(1) :- tanti(2), pochi(1).                        % , not nessuno(1,2)
 
                                                                         pochi(2) *
 
+                                                                        alcuni(2) *
+
 nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2).     alcuni(1)
                                                                         tanti(2), alcuni(1) NON MIN
 
@@ -43,7 +45,7 @@ nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2).     alcuni(1)
 
                                                                         pochi(2) *
 
-                                                                        alcuni(1) *
+                                                                        alcuni(2) *
                                                         pochi(1)
 
 
@@ -53,7 +55,7 @@ nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2).     alcuni(1)
 
                                                                         pochi(2)*
 
-                                                                        alcuni(1)*
+                                                                        alcuni(2)*
                                                         alcuni(5)                       NON SUPPORTATO
 
 %NON CICLICO, MI BASTA IL SUPPORTO
@@ -72,11 +74,9 @@ alcuni(2) :- tanti(2), pochi(2).
 alcuni(1) :- tanti(2), pochi(1).    
 
 nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). tanti(5). tanti(2). %AS
-nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). tanti(5). alcuni(1). %AS dubbio
 nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). alcuni(1).  tanti(2). %AS
 nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). alcuni(1).  pochi(2) %AS
 nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). pochi(1).  pochi(2) %AS
-                                                              alcuni(1) %AS dubbio
 
 
 
