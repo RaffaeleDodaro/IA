@@ -5,33 +5,51 @@ mercurio(Y) :- zeus(Y,X).
 zeus(3,4).
 giunone(2).
 
-%Istanziazione
-apollo(2) :- not zeus(2,2).
-mercurio(4).
-mercurio(3).
-zeus(2,3) :- not apollo(3).
-zeus(2,4) :- not apollo(4).
-mercurio(2).
+
+apollo(2) :-  not zeus(2,2).		% giunone(2),
+mercurio(4).					%  :-zeus(3,4), Z=X+1
+mercurio(3).					% :-zeus(3,4)
+zeus(2,4).		% mercurio(4), giunone(2), :- not apollo(4)
+zeus(2,3).		% mercurio(3), giunone(2), :- not apollo(3)
+mercurio(2).		% :-zeus(2,4)
+%mercurio(2).		% :-zeus(2,3)
+zeus(2,2) :- not apollo(2).			% giunone(2), mercurio(2),
+%mercurio(2) :-zeus(2,2).
+
+
+
+
+apollo(2) :-  not zeus(2,2).
 zeus(2,2) :- not apollo(2).
 
+zeus(3,4).giunone(2). mercurio(4). mercurio(3). zeus(2,4). zeus(2,3). mercurio(2). apollo(2).
+zeus(3,4).giunone(2). mercurio(4). mercurio(3). zeus(2,4). zeus(2,3). mercurio(2). zeus(2,2).
 
-                            zeus(2,4) => modello     NO AS PERCHE' NO SUPPORTO SU APOLLO(2)
-                zeus(2,3)
-                            apollo(4) => modello     NO AS PERCHE' NO SUPPORTO SU APOLLO(2)
-    apollo(2)
-                            zeus(2,4) => modello     NO AS PERCHE' NO SUPPORTO SU APOLLO(3)
-                apollo(3)
-                            apollo(4) => modello     NO AS PERCHE' NO SUPPORTO SU APOLLO(3)
 
-f +
+zeus(3,4).giunone(2). mercurio(4). mercurio(3). zeus(2,4). zeus(2,3). mercurio(2). apollo(2).	%best
+:~ mercurio(3), zeus(3,4). [4@3, X,Y]
+:~ mercurio(2), zeus(2,4). [4@2, X,Y]
+:~ mercurio(2), zeus(2,3). [3@2, X,Y]
+				[7@2]
+				[4@3]
 
-                            zeus(2,4) => modello     AS 
-                zeus(2,3)
-                            apollo(4) => modello     NO AS PERCHE' NO SUPPORTO SU APOLLO(4)
-    zeus(2,2)
-                            zeus(2,4) => modello     NO AS PERCHE' NO SUPPORTO SU APOLLO(3)
-                apollo(3)
-                            apollo(4) => modello     NO AS PERCHE' NO SUPPORTO SU APOLLO(3)
+zeus(3,4).giunone(2). mercurio(4). mercurio(3). zeus(2,4). zeus(2,3). mercurio(2). zeus(2,2).
+:~ mercurio(3), zeus(3,4). [4@3, X,Y]
+:~ mercurio(2), zeus(2,4). [4@2, X,Y]
+:~ mercurio(2), zeus(2,3). [3@2, X,Y]
+:~ mercurio(2), zeus(2,2). [2@2, X,Y]
+				[9@2]
+				[4@3]
 
-RIS. FINALE     mercurio(4). mercurio(3). mercurio(2). zeus(2,2). 
-                zeus(2,3).  zeus(2,4).  zeus(3,4).  giunone(2).
+
+zeus(3,4).giunone(2). mercurio(4). mercurio(3). zeus(2,4). zeus(2,3). mercurio(2). apollo(2).
+:-#sum{X,Y : zeus(X,Y), mercurio(X)} > 8.
+
+zeus(3,4).giunone(2). mercurio(4). mercurio(3). zeus(2,4). zeus(2,3). mercurio(2). zeus(2,2).	%se ne va
+:-#sum{X,Y : zeus(X,Y), mercurio(X)} > 8.
+
+
+
+%%%%%%%%%%%%%%%%%%%
+%       es3       %
+%%%%%%%%%%%%%%%%%%%

@@ -67,3 +67,28 @@ s(1,2). h(1). t(2,2). t(2,1). q(1,2). %AS OPTIMUM [1@1]
 s(1,2). h(1). t(2,2). r(1,2).                   %RIMANE
 s(1,2). h(1). t(2,2). h(2). q(2,2). q(1,2).     %RIMANE
 s(1,2). h(1). t(2,2). t(2,1). q(1,2).           %RIMANE OPTIMUM
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%
+% sec ese        %
+%%%%%%%%%%%%%%%%%%
+Scrivere  un  programma  ASP  che,  dato  in  input un  grafo  orientato  aciclico G=<N,A>, etichetti i nodi in N con valori compresi tra 1 e |N|, in modo tale da soddisfare le seguenti condizioni: 1) indicando con v(x) il valore assegnato ad un nodo x, per ogni arco (a,b) in A, si deve avere che v(b)>v(a); 
+2) indicando con D(a,b) la differenza v(b)-v(a) per ogni arco (a,b), il massimo tra i valori D(a,b) deve essere il più piccolo possibile.
+
+Modello dei dati in input:
+node(X)       i nodi del grafo
+arc(X,Y)       gli archi
+
+v(1..5).
+etichetto(X,N)|notEtichetto(X,N):-node(X),v(N).
+:-etichetto(X,V1),etichetto(Y,V2),V1>=V2,arc(X,Y).
+
+Differenza(A,B,D):-arc(X,Y),etichetto(X,V1),etichetto(Y,V2),D=V2-V1.
+:~#max{D:differenza(A,B,D)}=K.[K@1]
