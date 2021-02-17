@@ -1,4 +1,8 @@
-% Scrivere un programma ASP che, dati in input un grafo non orientato G=<V,E> ed un insieme di “n” colori ed un numero “k” <= “n”, identifichi il più grande sottografo di G che sia k-colorabile. Si ricorda che un (sotto)grafo è k-colorabile se è possibile trovare un assegnamento di esattamente un colore tra quelli disponibili per ciascun nodo in modo che non esistano due nodi adiacenti con lo stesso colore.
+% Scrivere un programma ASP che, dati in input un grafo non orientato G=<V,E> 
+ed un insieme di “n” colori ed un numero “k” <= “n”, identifichi il più grande 
+sottografo di G che sia k-colorabile. Si ricorda che un (sotto)grafo è k-colorabile 
+se è possibile trovare un assegnamento di esattamente un colore tra quelli disponibili 
+per ciascun nodo in modo che non esistano due nodi adiacenti con lo stesso colore.
 
 % Modello dei dati in INPUT:
 % •	color(C) 					 tutti i colori disponibili
@@ -11,7 +15,7 @@
 
 inNode(X) | outNode(X) :- node(X).
 inEdge(X,Y) :- edge(X,Y), inNode(X), inNode(Y).
-col(X,C)|notCol(X,C):-color(C),inNode(X)
+col(X,C)|notCol(X,C):-color(C),inNode(X).
 :-inEdge(X,Y),col(X,C),col(Y,C).
 :-count{C:col(X,C)}!=1, inNode(X).
 :-maxColor(K),#count{c:col(X,C)}!=K.

@@ -1,0 +1,72 @@
+federica(1). 
+laure(1,3).
+federica(Z) :-luca(X), laure(X,Z).
+luca(X) :-federica(X), not filippo(X).
+
+luca(1).		% federica(1),
+federica(3).		%, laure(1,3)
+luca(3).
+
+%b)
+federica(1). 
+laure(1,3).
+federica(Z) :-luca(X), laure(X,Z).
+luca(X) :-federica(X), not filippo(X).
+filippo(X) | luca(X) :-federica(X).
+
+luca(1) :- not filippo(1).				% federica(1),
+filippo(1) | luca(1).				% :-federica(1)
+federica(3) :-luca(1).				%, laure(1,3)
+luca(3) :-federica(3), not filippo(3).
+filippo(3) | luca(3) :-federica(3).
+
+federica(1). laure(1,3). luca(1) federica(3) luca(3)
+federica(1). laure(1,3). luca(1) federica(3) filippo(3)
+federica(1). laure(1,3). filippo(1).
+
+%non basta supporto
+federica(1). laure(1,3). luca(1) federica(3) luca(3)	%as
+luca(1).
+filippo(1) | luca(1).
+federica(3) :-luca(1).
+luca(3) :-federica(3).
+filippo(3) | luca(3) :-federica(3).
+
+
+
+federica(1). laure(1,3). luca(1) federica(3) filippo(3).	%as
+luca(1).
+filippo(1) | luca(1).
+federica(3) :-luca(1).
+filippo(3) | luca(3) :-federica(3).
+
+federica(1). laure(1,3). filippo(1).	%as
+filippo(1) | luca(1).
+federica(3) :-luca(1).
+luca(3) :-federica(3).
+filippo(3) | luca(3) :-federica(3).
+
+
+%punto c
+federica(1). laure(1,3). luca(1) federica(3) luca(3)		[8@2]
+:~  luca(1), federica(3). [3@2]
+:~  luca(3), federica(3). [3@2]
+:~  luca(1), federica(1). [1@2]
+:~  luca(3), federica(1). [1@2]
+
+
+federica(1). laure(1,3). luca(1) federica(3) filippo(3).		[3@1][4@2]
+:~  luca(1), federica(1). [1@2]
+:~  luca(1), federica(3). [3@2]
+:~  filippo(3). [3@1]
+
+
+
+federica(1). laure(1,3). filippo(1).	[1@1]		%BEST
+:~  filippo(1). [1@1]
+
+
+
+%punto c
+:-#sum{X:federica(X), filippo(X)}<=1.
+federica(1). laure(1,3). luca(1) federica(3) filippo(3)
