@@ -13,14 +13,21 @@ trattore(2).                                %:- not comandare(2,3).          %b(
 trattore(3) :- not comandare(3,4).          %b(4)
 
 andiamo(3) | a(3) :- comandare(3,3).
+andiamo(3) | a(3).
 
 
-b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            comandare(3,3).     comandare(3,4).     a(3).       AS
-b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            comandare(3,3).     comandare(3,4).     andiamo(3). AS
-b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            comandare(3,3).     trattore(3).        andiamo(3). %NON MINIMALE
-b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            comandare(3,3).     trattore(3).        a(3).       %NON MINIMALE
-b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            trattore(3).        andiamo(3).                     AS
-b(3).   b(4).   comandare(4,4).   comandare(4,3).   trattore(2).            trattore(3).        a(3).                           AS
+comandare(3,3)  :- not trattore(3). 
+comandare(3,4)  :- not trattore(3).
+trattore(3) :- not comandare(3,4).
+andiamo(3) | a(3) :- comandare(3,3), X < 4.
+andiamo(3) | a(3).
+
+
+b(3). b(4). trattore(2). comandare(4,3). comandare(4,4). comandare(3,3).  comandare(3,4).  andiamo(3).
+b(3). b(4). trattore(2). comandare(4,3). comandare(4,4). comandare(3,3).  comandare(3,4).  a(3).
+b(3). b(4). trattore(2). comandare(4,3). comandare(4,4). trattore(3). andiamo(3).
+b(3). b(4). trattore(2). comandare(4,3). comandare(4,4). trattore(3). a(3).
+
 
 
 %per vedere se sono as, vedo se il programma e' aciclio. se cosi fosse mi basta verificare la condizione di supporto

@@ -33,29 +33,25 @@ spiaggia(2). spiaggia(3).
 
 
 
-                                                                            ionio(3,2)      *
+                                                                            ionio(3,2)      * 
                                                             ionio(2,3)
                                                                             tirreno(3,2)    *
                                             ionio(3,3)
                                                                             ionio(3,2)      *
                                                             tirreno(2,3)
-                                                                            tirreno(3,2), ionio(3,2)    *
+                                                                            tirreno(3,2) *
 
-                                                                            ionio(3,2)      *
-                                                            ionio(2,3)
-                                                                            tirreno(3,2)    *
+                                                           
                             tirreno(2,2)
-                                                                            ionio(3,2)      *
-                                                            tirreno(2,3)
-                                                                            tirreno(3,2)    *
+                                                            
 
-                                                                            ionio(3,2), ionio(3,3)  *
+                                                                            ionio(3,2), ionio(3,3)  *    NON MIN
                                                             ionio(2,3)
                                                                             tirreno(3,2)     *
                                             tirreno(3,3)
-                                                                            ionio(3,2), ionio(3,3)   *
+                                                                            ionio(3,2), ionio(3,3)   *    NON MIN
                                                             tirreno(2,3)
-                                                                            tirreno(3,2), ionio(3,3)  *
+                                                                            tirreno(3,2), ionio(3,3)  *    NON MIN
 
 
 

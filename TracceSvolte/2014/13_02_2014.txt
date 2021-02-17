@@ -1,0 +1,123 @@
+piove(X) | gita(X) :- vacanza(X).
+vacanza(X) :- libero(X,Y), not piove(Y).
+vacanza(1).
+vacanza(2).
+libero(3,1).
+libero(2,2).
+
+vacanza(3) :- not piove(1).		% libero(3,1),
+piove(1) | gita(1).			%:-vacanza(1)
+piove(2) | gita(2).			%:-vacanza(2)
+piove(3) | gita(3) :-vacanza(3).
+%Basta il supporto
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3).piove(1).piove(2).piove(3). %non supp
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) .piove(1).piove(2).gita(3). %non supp
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) .piove(1).gita(2). piove(3). %non supp
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) .piove(1). gita(2). gita(3). %non supp
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). piove(2). piove(3).
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). piove(2). gita(3). 
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). gita(2). piove(3). 
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). gita(2). gita(3). 
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). piove(1). piove(2). 
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). piove(1). gita(2).
+
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). piove(2). piove(3). %se ne va
+:-#count{X:gita(X)}<2, #count{Y:vacanza(Y)}>2.
+
+
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). piove(2). gita(3). 
+:-#count{X:gita(X)}<2, #count{Y:vacanza(Y)}>2.
+
+
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). gita(2). piove(3). 
+:-#count{X:gita(X)}<2, #count{Y:vacanza(Y)}>2.
+
+
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). gita(2). gita(3). 
+:-#count{X:gita(X)}<2, #count{Y:vacanza(Y)}>2.
+
+
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). piove(1). piove(2). 
+:-#count{X:gita(X)}<2, #count{Y:vacanza(Y)}>2.
+
+
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). piove(1). gita(2).	
+:-#count{X:gita(X)}<2, #count{Y:vacanza(Y)}>2.
+
+
+
+% punto b
+:~ piove(X), vacanza(Y). [1@X]
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). piove(2). gita(3). 	[3@2][3@3]
+:~ piove(2), vacanza(1). [1@2]
+:~ piove(2), vacanza(2). [1@2]
+:~ piove(2), vacanza(3). [1@2]
+:~ piove(3), vacanza(1). [1@3]
+:~ piove(3), vacanza(2). [1@3]
+:~ piove(3), vacanza(3). [1@3]
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). gita(2). piove(3). [3@3]
+:~ piove(3), vacanza(1). [1@3]
+:~ piove(3), vacanza(2). [1@3]
+:~ piove(3), vacanza(3). [1@3]
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). gita(2). gita(3). %non pago
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). piove(1). piove(2). 	[2@1][2@2][0@3]
+:~ piove(1), vacanza(1). [1@1]
+:~ piove(1), vacanza(2). [1@1]
+:~ piove(2), vacanza(1). [1@2]
+:~ piove(2), vacanza(2). [1@2]
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). piove(1). gita(2).	[2@1][0@2][0@3]
+:~ piove(1), vacanza(1). [1@1]
+:~ piove(1), vacanza(2). [1@1]
+
+%	Punto c
+:~ not gita(X), not piove(X), libero(X,Y). [Y:X]
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). piove(2). gita(3). 	[3@2][3@3]
+:~ piove(2), vacanza(1). [1@2]
+:~ piove(2), vacanza(2). [1@2]
+:~ piove(2), vacanza(3). [1@2]
+:~ piove(3), vacanza(1). [1@3]
+:~ piove(3), vacanza(2). [1@3]
+:~ piove(3), vacanza(3). [1@3]
+:~ not gita(3), not piove(3), libero(3,1). [1@3]	%non pago
+:~ not gita(2), not piove(2), libero(2,2). [2@2] 	%non pago
+
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). gita(2). piove(3). [3@3]
+:~ piove(3), vacanza(1). [1@3]
+:~ piove(3), vacanza(2). [1@3]
+:~ piove(3), vacanza(3). [1@3]
+:~ not gita(3), not piove(3), libero(3,1). [1@3]	%non pago
+:~ not gita(2), not piove(2), libero(2,2). [2@2] 	%non pago
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). Vacanza(3) . gita(1). gita(2). gita(3). %non pago
+:~ not gita(3), not piove(3), libero(3,1). [1@3]	%non pago
+:~ not gita(2), not piove(2), libero(2,2). [2@2] 	%non pago
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). piove(1). piove(2). 	[2@1][4@2][1@3]
+:~ piove(1), vacanza(1). [1@1]
+:~ piove(1), vacanza(2). [1@1]
+:~ piove(2), vacanza(1). [1@2]
+:~ piove(2), vacanza(2). [1@2]
+:~ not gita(3), not piove(3), libero(3,1). [1@3]
+:~ not gita(2), not piove(2), libero(2,2). [2@2] 
+
+vacanza(1). vacanza(2). libero(3,1). libero(2,2). piove(1). gita(2).	[2@1][0@2][1@3]
+:~ piove(1), vacanza(1). [1@1]
+:~ piove(1), vacanza(2). [1@1]
+:~ not gita(3), not piove(3), libero(3,1). [1@3]
+:~ not gita(2), not piove(2), libero(2,2). [2@2] 	%non pago
+
+
+
+

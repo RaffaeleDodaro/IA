@@ -1,0 +1,107 @@
+a(Y) | b(Z) :- d(Y,Z), not c(Y).
+c(Y) | b(Y) :-d(Y,_), not a(Y).
+d(X,Z) :-c(Y),  a(X), Z=X+Y.
+d(3,1).d(2,4).a(2).
+
+a(Y) | b(Z) :- d(Y,Z), not c(Y).
+c(Y) | b(Y) :- d(Y,_), not a(Y).
+d(X,Z) :- c(Y),  a(X), Z=X+Y.
+d(3,1).
+d(2,4).
+a(2).
+
+a(3) | b(1) :- not c(3).			% d(3,1),
+c(3) | b(3) :- not a(3).			% d(3,1),
+d(3,6) :- c(3),  a(3), Z=X+Y.
+d(2,5) :- c(3).				%,  a(2)
+a(3) | b(6) :- d(3,6), not c(3).
+c(3) | b(3) :- d(3,6), not a(3).
+
+Non basta supporto
+d(3,1).d(2,4).a(2).a(3). %AS
+a(3) | b(1).
+d(3,6) :- c(3),  a(3), Z=X+Y.
+d(2,5) :- c(3).
+a(3) | b(6) :- d(3,6).
+
+
+
+d(3,1).d(2,4).a(2). B(1).b(3)	%AS
+a(3) | b(1).
+c(3) | b(3).
+d(3,6) :- c(3),  a(3), Z=X+Y.
+d(2,5) :- c(3).
+a(3) | b(6) :- d(3,6).
+c(3) | b(3) :- d(3,6).
+
+
+d(3,1).d(2,4).a(2).c(3).d(2,5).		%AS
+c(3) | b(3).
+d(3,6) :- c(3),  a(3), Z=X+Y.
+d(2,5) :- c(3).
+c(3) | b(3) :- d(3,6).
+
+
+:-#sum{X,Y:d(X,Y)}<5.
+d(3,1).d(2,4).a(2).c(3).d(2,5).
+d(3,1).d(2,4).a(2). B(1).b(3).
+d(3,1).d(2,4).a(2).a(3).
+
+
+
+%%%punto b
+:~ t(X,Y), not p(X,Y). [X:Y]
+:~ m(X,Y), Z=X+Y. [X:Z]
+
+A1:{a(2,1,3), c(1), c(2), m(1,1), t(2,1), m(2,1), m(2,2), f(1), p(1,2)}
+:~ t(2,1), not p(2,1). [2:1]
+:~ m(1,1), Z=X+Y. [1:2]
+:~ m(2,1), Z=X+Y. [2:3]
+:~ m(2,2), Z=X+Y. [2:4]
+
+
+
+A2: {a(2,1,3), c(1), c(2), m(1,1), t(2,1), m(2,1), m(2,2), p(2,1), p(1,2)}
+
+A3: {a(2,1,3), c(1), c(2), m(1,1), m(1,2), m(2,1), m(2,2)}
+
+
+%%%%%%%%%%%%%%%%%%%%%
+%   ES2             %
+%%%%%%%%%%%%%%%%%%%%%
+Siano dati 3 insiemi, finiti, contenenti numeri interi positivi; siano X, Y e Z. Si vogliono 
+selezionare delle triple di numeri interi estratte dall’insieme costituito dal prodotto cartesiano 
+X x Y x Z dei tre insiemi dati, tenendo conto del fatto che i3 insiemi in input non sononecessariamente 
+disgiunti (cioè, un numero intero può comparire in più di uno degli insiemi), e di quanto espresso di seguito.
+
+•(s1).Considerato un elemento di un insieme, questo non può comparire in più di una tripla (cioè,non 
+esistono due triple distinte che abbiano uno stesso numero nella stessa posizione).
+
+•(s2). È data in input una funzione che calcola quanto si “guadagna” per ciascuna tripla. È necessario 
+selezionare un insieme di triple il cui premio totale (i.e., la somma dei premi di tutte le triple) 
+sia superiore ad una certa soglia, anche questa fornita in input.
+
+•(w1). Si preferiscono triple i cui tre elementi sono tutti diversi.
+•(w2). In subordine, se una tripla non è composta da tre elementi tutti diversi tra loro, si preferisce
+che contenga almeno due elementi diversi (i.e., si preferisce non avere triple composte tutte dallo stesso numero).
+Si noti che.tra w1 e w2, è più importante soddisfare w1. Si noti, inoltre, che la preferenza w2 deve 
+essere tenuta in considerazione solo per le triple per lequali non è possibile soddisfare w1.
+
+
+%%%%%%%%%%%%%%%%%%%%%
+%  ES 3            %
+%%%%%%%%%%%%%%%%%%%%%
+q(f(1)).
+p(g(X),Y,Z):-p(X,Z,Y).
+p(X,f(X),f(X)):-q(X).
+s(X):-q(f(X)).
+q(f(X)):-s(X).
+
+p(f(1),f(f(1)),f(f(1))).			%:-q(f(1))
+p(g(f(1)), f(f(1)), f(f(1))).	  	%:-p(f(1), f(f(1)), f(f(1)))
+p(f(1),f(1),f(1)).				% :-q(f(1))
+p(g(f(1)), f(1), f(1)).			%:-p(f(1), f(1), f(1))
+s(1).		%:-q(f(1))
+q(f(1)).		%:-s(1)
+
+ILLIMITATO

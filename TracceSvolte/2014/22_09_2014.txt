@@ -1,0 +1,31 @@
+qua(1,5).
+ma(1,4).
+qua(2,2).
+ma(2,3).
+noi(X) | voi(X) |loro(Y) :-qua(X,Y), not noi(Y).
+noi(X) :- voi(X), loro(Y), not ma(X,Y).
+
+noi(1) | voi(1) |loro(5).	% qua(1,5),
+noi(2) | voi(2) |loro(2) :- not noi(2).	% qua(2,2),
+
+noi(1) :-voi(1), loro(5).
+noi(1) :-voi(1), loro(2).
+noi(2) :-voi(2), loro(5).
+noi(2) :-voi(2), loro(2).
+
+qua(1,5).ma(1,4).qua(2,2).ma(2,3).noi(1).loro(2). ok
+
+qua(1,5).ma(1,4).qua(2,2).ma(2,3).voi(1).voi(2). ok
+
+qua(1,5).ma(1,4).qua(2,2).ma(2,3).loro(5).loro(2). ok
+
+qua(1,5). ma(1,4). qua(2,2). ma(2,3). noi(1). voi(2). Ok
+
+:-#max{X:loro(X)}>1, #min{Y:noi(Y)}<2.
+qua(1,5).ma(1,4).qua(2,2).ma(2,3).voi(1).voi(2).
+qua(1,5).ma(1,4).qua(2,2).ma(2,3).loro(5).loro(2).
+qua(1,5). ma(1,4). qua(2,2). ma(2,3). noi(1). voi(2).
+
+b) Si aggiungano i seguenti weak constraint:
+:~ voi(X). [2:X]
+:~ loro(X). [X:1]
