@@ -120,3 +120,56 @@ b(1). b(2). b(3). b(4). a(2,1). a(3,1). a(4,3). a(1,2). a(1,3). a(3,4). d(1). c(
 :~ c(3),d(4), 4>3. [1:3]
                    [1:2]
                    [1:3]
+
+
+
+
+
+%%%%%%%%%%%%%%%%%
+%       ES2     %
+%%%%%%%%%%%%%%%%%
+Tra poco arriverà la primavera, e all’Università di Pasticciopoli è tempo di preparare i test di ingresso per il prossimo anno accademico. 
+Negli ultimi anni si sta discutendo di una revisione del formato del test, che sia più adatta a selezionare efficacemente gli studenti 
+promettenti. Il problema è che non è affatto semplice mettere tutto assieme, e così il rettore, Giuliano Grandecano, ha contattato uno 
+dei più brillanti ex-studenti, il nostro amico Ciccio Pasticcio, per risolvere il problema. L’università possiede già una nutrita base di 
+dati contenente domande debitamente classificate. Si aiuti Ciccio scrivendo un programma DLV che componga il test di ammissione, tenendo conto 
+di quanto diportato di seguito.
+
+domandaTest(ID)|notDomandaTest(ID):-domanda(ID,_,_).
+-> Il test deve contenere esattamente 100 domande.
+:-#count{I:domandaTest(I)}!=100.
+
+->Le domande sono raggruppate in gruppi di similarità: non è ammissibile inserire nel test due domande che risultino nello stesso gruppo di similarità.
+:-domandaTest(I1),domanda(I1,C1,_),domandaTest(I2),domanda(I2,C1,_),I1!=I2.
+
+->Ci sono 5 categorie di domande, una per ciascuna delle seguenti discipline: comprensione verbale, logica, matematica, scienze, inglese. 
+Ciascuna domanda è caratterizzata da un numero, che va da 0 a 5, che indica quanto la domanda stessa sia attinente ad una data disciplina. 
+Ad esempio, una domanda con attinenza 0 (zero) in logica non riguarderà minimamente la logica, mentre una con attinenza 5 (cinque) in matematica 
+sarà una domanda fortemente focalizzata su questa disciplina.
+
+->Tutte le discipline devono essere “coperte”: pertanto non è possibile che ci sia una disciplina per cui le domande ad essa attinenti con 
+punteggio maggiore di zero sia minore di 10.
+:-#count{D:attinenza(D,Dis,V),V>0,domandaTest(D)}=K,disciplina(Dis),K<10.
+
+->Ogni domanda presenta un grado di difficoltà misurato con il tempo orientativo che essa richiede per “pensare” o “calcolare” una risposta; 
+si desidera minimizzare il tempo complessivo.
+:~#sum{T:domandaTest(ID),domanda(ID,_,T)}=K.[K@1,K,ID]
+
+->Si definisce come “grado di copertura” del test rispetto ad una certa disciplina la somma totale dei valori di attinenza di tutte le domande 
+per la disciplina stessa. La cosa più importante è massimizzare il grado di coperture sulla logica, e contemporaneamente minimizzare il numero 
+di domande che siano attinenti alle scienze (cioè il numero di domande con attinenza a scienze maggiore di zero).
+gradoDiCopertura(G,D):-disciplina(D), #sum{V:domandaTest(ID),attinenza(ID,D,V)}=G.
+
+% massimizzare il grado di coperture sulla logica
+:~ notDomandaTest(ID),attinenza(ID,logica,_),gradoDiCopertura(G,logica). [G@3]
+
+% minimizzare il numero di domande che siano attinenti alle scienze
+:~#count{ID:attinenza(ID,scienza,Z), domandaTest(ID),Z>0}=K.[K@3]
+
+->Il grado di copertura per comprensione verbale non può essere minore del grado di copertura per matematica.
+
+Modello dei dati in input:
+domanda (ID, ClasseDiEquivalenza, TempoRichiesto,). ->Le domande disponibili
+disciplina (ID). ->Le discipline 
+classeDiEquivalenza(ID). ->Le classi di equivalenza
+attinenza (IdDomanda, IdDisciplina, Valore). ->L’attinenza delle domande alle discipline

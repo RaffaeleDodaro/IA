@@ -1,5 +1,5 @@
 a(Y) :- c(Y,X), not v(Y).
-c(X,Z) :- a(X),  v(Y), Z=X+Y.
+c(X,Z) :- a(X), v(Y), Z=X+Y.
 v(Y) | notv(Y) :- c(Y,Z),not a(Y).
 c(1,2).
 c(4,5).
@@ -84,3 +84,62 @@ v(4) | notv(4) :- c(4,8).           ,not a(4).
 v(1) | notv(1) :- c(1,5).           ,not a(1).
                                     a(4) :- c(4,8), not v(4).
                                     a(1) :- c(1,5), not v(1).
+
+
+%%%%%%%%%%%%%%%
+%     es 2    %
+%%%%%%%%%%%%%%%
+
+Sia dato un grafo orientato G=<V,E>tale che gli archi in E siano pesati (pesi solo positivi),esiano presenti in V due 
+nodi speciali detti sorgente e destinazione(si può assumere che da un nodo X ad un nodo Y ci sia al più un arco).Determinare un 
+insieme di archi che devono essere rimossi da G affinché il grafo ottenuto dopo la rimozione rispetti tutte le seguenti condizioni: 
+s1.La destinazione NON deve essere raggiungibile dalla sorgente.
+s2.Non devono essere presenti cicli.
+s3.Ogni nodo deve avere un numero di archi entranti non superiore a 3.
+Inoltre, dovrebbero essere preferite le soluzioni che rispettano possibilmente i seguenti requisiti:
+w1.Per ogni nodo, dovrebbe essere rimosso al più un arco uscente. 
+w2.Se per un certo nodo X più di un arco uscente deve essere rimosso, allora dovrebbero essere preferite le soluzioni in cui il peso totale
+        degli archi uscenti rimossi per X è minimo. 
+Si noti che tra w1 e w2, è più importante soddisfare w1. Si noti inoltre che, la preferenza w2 deve essere tenuta in considerazione solo 
+        per i nodi per i quali non è possibile soddisfare w1. 
+
+Sia dato un grafo orientato G=<V, E>tale che gli archi in E siano pesati (pesi solo positivi), e siano presenti in V due nodi speciali detti sorgente e destinazione (si può assumere che da un nodo X ad un nodo Y ci sia al più un arco). Determinare un insieme di archi che devono essere rimossi da G affinché il grafo ottenuto dopo la rimozione rispetti tutte le seguenti condizioni: 
+node(1..5).
+peso(1…5).
+source(1).
+destination(5)
+arc(X,Y,W)|notarc(X,Y,W):-node(X),node(Y),peso(W).
+:-arc(X,Y,W),arc(X,Y,L),L!=W.
+
+remove(X,Y)|notremove(X,Y):-arc(X,Y,_).
+
+s1. La destinazione NON deve essere raggiungibile dalla sorgente.
+:-arc(S,D,_),source(S),destination(D).
+
+s2.Non devono essere presenti cicli.
+
+s3.Ogni nodo deve avere un numero di archi entranti non superiore a 3.
+:-#count{Y:notremove(Y,X)}>3,node(X).
+
+Inoltre, dovrebbero essere preferite le soluzioni che rispettano possibilmente i seguenti requisiti:
+w1.Per ogni nodo, dovrebbe essere rimosso al più un arco uscente. 
+:~node(X),#count{Y,X:remove(Y,X)}=K,K>1.[1@2]
+
+w2. Se per un certo nodo X più di un arco uscente deve essere rimosso, allora dovrebbero essere preferite le soluzioni in cui il peso 
+totale degli archi uscenti rimossi per X è minimo. 
+
+Si noti che tra w1 e w2, è più importante soddisfare w1. Si noti inoltre che, la preferenza w2 deve essere tenuta in considerazione 
+solo per i nodi per i quali non è possibile soddisfare w1. 
+
+Modello dei dati in INPUT:
+•node(X)i nodi in V del grafo in input.
+•arc(X,Y,W) gli archi in E del grafo in input, dove W indica il peso.
+•source(X)il nodo sorgente in V.
+•destination(X)il nodo destinazione in V.
+
+
+Modello dei dati in INPUT:
+•node(X)i nodi in V del grafo in input.
+•arc(X,Y,W)   gli archi in E del grafo in input, dove W indica il peso.
+•source(X)il nodo sorgente in V.
+•destination(X)il nodo destinazione in V.

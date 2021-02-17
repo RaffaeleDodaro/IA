@@ -1,3 +1,88 @@
+%%%%    ES 1
+sanremo(X) :- raffaele(X), not baglioni(X).
+baglioni(X) | bisio(X) :- raffaele(X), not sanremo(X).
+raffaele(X) :- canzone(X,Y), sanremo(Y).
+
+canzone(4,5). 
+canzone(6,4).  
+
+sanremo(3). 
+
+raffaele(5).  
+
+baglioni(6).
+
+
+raffaele(4) :- sanremo(5).	                            %canzone(4,5), 
+raffaele(6) :- sanremo(4).	                            %canzone(6,4), 
+baglioni(5) | bisio(5) :- not sanremo(5).               %raffaele(5)
+baglioni(4) | bisio(4) :- raffaele(4), not sanremo(4).
+sanremo(5) :- not baglioni(5).                          %raffaele(5)
+sanremo(4) :- raffaele(4), not baglioni(4).
+
+
+%non basta il supporto
+
+canzone(4,5). canzone(6,4).  sanremo(3). raffaele(5).  baglioni(6).sanremo(5).raffaele(4).baglioni(4).      %AS
+raffaele(4) :- sanremo(5).
+raffaele(6) :- sanremo(4).
+baglioni(4) | bisio(4) :- raffaele(4).
+sanremo(5).
+
+
+canzone(4,5). canzone(6,4).  sanremo(3). raffaele(5).  baglioni(6).sanremo(5).raffaele(4).sanremo(4).      %AS
+raffaele(4) :- sanremo(5).
+raffaele(6) :- sanremo(4).
+sanremo(5).
+sanremo(4) :- raffaele(4).
+
+
+canzone(4,5). canzone(6,4).  sanremo(3). raffaele(5).  baglioni(6).baglioni(5).      %AS
+raffaele(4) :- sanremo(5).
+raffaele(6) :- sanremo(4).
+baglioni(5) | bisio(5).
+baglioni(4) | bisio(4) :- raffaele(4).
+sanremo(4) :- raffaele(4).
+
+
+
+%%%%%% punto a-2
+
+:- canzone(X,Y), X <= #count { Z : sanremo(Z) } <= Y.
+canzone(4,5). canzone(6,4).  sanremo(3). raffaele(5).  baglioni(6).baglioni(5).
+canzone(4,5). canzone(6,4).  sanremo(3). raffaele(5).  baglioni(6).sanremo(5).raffaele(4).sanremo(4).
+canzone(4,5). canzone(6,4).  sanremo(3). raffaele(5).  baglioni(6).sanremo(5).raffaele(4).baglioni(4).
+
+
+
+%%%%%%punto b
+A1: {giovani(1,3). ospite(1). ospite(4). big(1). big(4). ospite(3). big(3).}         %non pago  %best
+
+
+A2: {giovani(1,3). ospite(1). ospite(4). big(1). serata(4). ospite(3). big(3).} [4@1][4@3][5@4]
+:~ ospite(4), not big(4). [1@4, X]
+:~ serata(4), ospite(1), #max{ X : big(X) } < 4. [4@1, Y,H]
+:~ serata(4), ospite(4), #max{ X : big(X) } < 4. [4@4, Y,H]
+:~ serata(4), ospite(3), #max{ X : big(X) } < 4. [4@3, Y,H]
+
+
+A3: {giovani(1,3). ospite(1). ospite(4). big(1). big(4). ospite(3). serata(3).} [1@3]
+:~ ospite(3), not big(3). [1@3, X]
+
+
+A4: {giovani(1,3). ospite(1). ospite(4). big(1). serata(4). ospite(3). serata(3).}      [7@1][8@3][8@4]
+:~ ospite(4), not big(4). [1@4, X]
+:~ ospite(3), not big(3). [1@3, X]
+:~ serata(4), ospite(1), #max{ X : big(X) } < 4. [4@1, Y,H]
+:~ serata(4), ospite(4), #max{ X : big(X) } < 4. [4@4, Y,H]
+:~ serata(4), ospite(3), #max{ X : big(X) } < 4. [4@3, Y,H]
+
+:~ serata(3), ospite(1), #max{ X : big(X) } < 3. [3@1, Y,H]
+:~ serata(3), ospite(4), #max{ X : big(X) } < 3. [3@4, Y,H]
+:~ serata(3), ospite(3), #max{ X : big(X) } < 3. [3@3, Y,H]
+
+
+%%%%    ES 2
 % Scrivere un programma ASP che, dati in input un grafo non orientato G=<V,E> 
 ed un insieme di “n” colori ed un numero “k” <= “n”, identifichi il più grande 
 sottografo di G che sia k-colorabile. Si ricorda che un (sotto)grafo è k-colorabile 
@@ -21,3 +106,21 @@ col(X,C)|notCol(X,C):-color(C),inNode(X).
 :-maxColor(K),#count{c:col(X,C)}!=K.
 outEdge(X,Y):-edge(X,Y), not inEdge(X,Y).
 :~outEdge(X,Y) [1@1,X,Y]
+
+
+%%%%%%% es 3
+p(Y,X) :- q(X,Y).
+q(f(X), Y) :- r(Y), r(X).
+r(f(X)) :- p(X, f(Y)).
+
+r(1). 	r(2).
+
+q(f(1), 1) :- r(1), r(1).
+q(f(2), 1) :- r(1), r(2).
+q(f(1), 2) :- r(2), r(1).
+q(f(2), 2) :- r(2), r(2).
+p(1,f(1)) :- q(f(1), 1) .
+.
+.
+.
+. illimitato
