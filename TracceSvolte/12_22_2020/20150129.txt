@@ -1,14 +1,44 @@
 %%%%%%%%%%%%
-%   ES 3   %
+%   ES 1   %
 %%%%%%%%%%%%
-cell(X,Y,S).
-inCell(X,Y,piu)|inCell(X,Y,meno)|inCell(X,Y,vuoto):-cell(X,Y,S).
-adiacenti(X,Y,X1,Y):-cell(X,Y,_),cell(X1,Y,_),X1=X+1.
-adiacenti(X,Y,X1,Y1):-adiacenti(X1,Y1,X,Y).
-:-inCell(X,Y,P),inCell(X1,Y1,P),adiacenti(X,Y,X1,Y1),P!=vuoto.
-:-inCell(X1,Y1,vuoto),inCell(X2,Y2,P),cell(X1,Y1,S),cell(X2,Y2,S),P!=vuoto.
-:-inforiga(R,P,_),#count{C:inCell(R,C,piu)}!=P.
-:-inforiga(R,P,_),#count{C:inCell(R,C,meno)}!=M.
+magistrale(X) | lavoro(X) | disoccupato(X) :- triennale(X).
+triennale(X) :- bravo(X,Y), not lavoro(Y).
+disoccupato(X) :- triennale(Y), magistrale(X),not bravo(X,Y).
+
+
+
+
+bravo(1,2). 
+bravo(2,3). 
+lavoro(3). 
+
+
+triennale(1).      %bravo(1,2), 
+magistrale(1) | lavoro(1) | disoccupato(1).
+disoccupato(1) :-  magistrale(1).
+
+bravo(1,2). bravo(2,3). lavoro(3). triennale(1). magistrale(1). disoccupato(1). NON MIN
+bravo(1,2). bravo(2,3). lavoro(3). triennale(1). lavoro(1).
+bravo(1,2). bravo(2,3). lavoro(3). triennale(1). disoccupato(1). 
+
+:- #count{ X : lavoro(X) } > 3.
+bravo(1,2). bravo(2,3). lavoro(3). triennale(1). lavoro(1).
+bravo(1,2). bravo(2,3). lavoro(3). triennale(1). disoccupato(1). 
+
+
+
+
+bravo(1,2). bravo(2,3). lavoro(3). triennale(1). lavoro(1).         [1@1][1@2]      %best
+:~ bravo(1,2), not magistrale(1). [1 @ 1]
+:~ bravo(2,3), not magistrale(2). [1 @ 2]
+
+
+bravo(1,2). bravo(2,3). lavoro(3). triennale(1). disoccupato(1).     [1@1][6@2]
+:~ bravo(1,2), not magistrale(1). [1 @ 1]
+:~ bravo(2,3), not magistrale(2). [1 @ 2]
+:~ bravo(1,2), disoccupato(1). [2 @ 2] 
+:~ bravo(2,3), disoccupato(1). [3 @ 2] 
+
 
 
 %%%%%%%%%%%%
@@ -26,3 +56,18 @@ precedeTran(N1,N2):-precede(N1,N3), precedeTran(N3,N2).
 tappe(T):-#count{N:associo(N,_)}=T.
 posizione(1).
 sequenza(N,P)|notSequenza(N,P):-
+
+
+
+
+%%%%%%%%%%%%
+%   ES 3   %
+%%%%%%%%%%%%
+cell(X,Y,S).
+inCell(X,Y,piu)|inCell(X,Y,meno)|inCell(X,Y,vuoto):-cell(X,Y,S).
+adiacenti(X,Y,X1,Y):-cell(X,Y,_),cell(X1,Y,_),X1=X+1.
+adiacenti(X,Y,X1,Y1):-adiacenti(X1,Y1,X,Y).
+:-inCell(X,Y,P),inCell(X1,Y1,P),adiacenti(X,Y,X1,Y1),P!=vuoto.
+:-inCell(X1,Y1,vuoto),inCell(X2,Y2,P),cell(X1,Y1,S),cell(X2,Y2,S),P!=vuoto.
+:-inforiga(R,P,_),#count{C:inCell(R,C,piu)}!=P.
+:-inforiga(R,P,_),#count{C:inCell(R,C,meno)}!=M.

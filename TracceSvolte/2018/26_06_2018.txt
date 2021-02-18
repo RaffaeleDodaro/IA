@@ -1,16 +1,30 @@
-Sia dato un grafo non orientato G=<V,E>, tale che ogni arco eE sia etichettato con un intero positivo strettamente maggiore di zero, corrispondente ad un peso; sia dato poi un intero PMAX, strettamente maggiore di zero. Si vuole selezionare un insieme di nodi vSELV tale che siano rispettate le condizioni riportate di seguito.
-•(s1) Se un nodo è incluso in vSEL, allora nessun altro nodo ad esso adiacente nel grafo G può essere incluso in vSEL; cioè, se vvSEL, non può esistere uvSELt.c. (u,v)E.
+Sia dato un grafo non orientato G=<V,E>, tale che ogni arco eE sia etichettato con un intero positivo strettamente maggiore di zero, 
+corrispondente ad un peso; sia dato poi un intero PMAX, strettamente maggiore di zero. Si vuole selezionare un insieme di nodi vSELV tale 
+che siano rispettate le condizioni riportate di seguito.
+•(s1) Se un nodo è incluso in vSEL, allora nessun altro nodo ad esso adiacente nel grafo G può essere incluso in vSEL; cioè, se vvSEL, 
+non può esistere uvSELt.c. (u,v)E.
 Invsel(X)|notivsel(X):-node(X).
 :-edge(X,Y,_),invsel(X),invSel(Y)
-•(s2) Non  è  possibile  che  ci  siano  archi  in  V  che  non  sono  coperti  da vSEL. Un  arco  si considera “coperto” da vSEL se almeno uno dei suoi estremi è incluso in vSEL; cioè, (u,v)E è “coperto” se uvSEL oppure vvSEL.
+
+
+•(s2) Non  è  possibile  che  ci  siano  archi  in  V  che  non  sono  coperti  da vSEL. Un  arco  si considera “coperto” da vSEL se almeno uno 
+dei suoi estremi è incluso in vSEL; cioè, (u,v)E è “coperto” se uvSEL oppure vvSEL.
 :-edge(X,Y),notinvsel(X),notinvsel(Y).
-•(s3) Ogni nodo incluso in vSEL ha un costo, che è calcolato come il peso minimo degli archi su esso incidenti; inoltre, il costo di vSEL è determinato dalla somma del costo di ciascun nodo incluso in vSEL. Il costo di vSEL non può mai eccedere il valore PMAX dato. Inoltre, si preferiscono soluzioni ottime in accordo alle preferenze espresse di seguito.
+
+
+•(s3) Ogni nodo incluso in vSEL ha un costo, che è calcolato come il peso minimo degli archi su esso incidenti; inoltre, il costo di vSEL è 
+determinato dalla somma del costo di ciascun nodo incluso in vSEL. Il costo di vSEL non può mai eccedere il valore PMAX dato. Inoltre, si 
+preferiscono soluzioni ottime in accordo alle preferenze espresse di seguito.
 calcoloCostoMin(V,K):-invsel(V),#min{C:edge(V,Y,C)}=K.
 sommaCosto(K):-#sum{K,X:calcoloCostoMin(X,K)}=S.
 :-sommaCosto(K)>pmax(P).
+
+
 •(w1) Cosa più importante: la differenza tra PMAX e il costo totale di vSEL deve essere la minima possibile.
 
-•(w2) Cosa meno importante: Identifichiamo con uMin (rispettivamente, uMax)un  nodo incluso in vSEL tale che  il suo  costo  sia pari  al minimo (rispettivamente,  al massimo) assoluto (si noti che possono esistere più nodi con questa proprietà). Si preferisce evitare che una coppia di nodi del tipo <uMin, uMax> non sia connessa (i.e., “raggiungibile”) in G.
+•(w2) Cosa meno importante: Identifichiamo con uMin (rispettivamente, uMax)un  nodo incluso in vSEL tale che  il suo  costo  sia pari  al minimo
+ (rispettivamente,  al massimo) assoluto (si noti che possono esistere più nodi con questa proprietà). Si preferisce evitare che una coppia di 
+ nodi del tipo <uMin, uMax> non sia connessa (i.e., “raggiungibile”) in G.
 Modello dei dati in INPUT:
 •node(V)i nodi del grafo
 •edge(U,V,C)gli archi del grafo, con i rispettivi costi (relazione SIMMETRICA)

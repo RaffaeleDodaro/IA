@@ -108,32 +108,6 @@ A3: {q(2,1), q(3,2), b(1,1), b(2,2), c(1), c(2), t(1,1), t(2,2)}                
 
 
 
-%%%%%%%%%%%%%%%%%%
-%   ESERCIZIO 3  %
-%%%%%%%%%%%%%%%%%%
-
-p(f(X),f(X)) :- p(X,f(X)).
-p(1,f(1)). 
-
-p(f(1),f(1)).                %:- p(1,f(1)).
-%se vado a sostituire sopra non matcherà perché non posso usare X in p(X,f(X)) perché questa istanza ha f(X) uguale. minuto 55
-
-
-AS:     p(1,f(1)). + {p(f(1),f(1))} 
-
-
-
-%seconda parte
-
-q(f(X,Y)):-q(f(X)),q(Y), not p(f(X),f(Y)).
-q(1). q(f(1)).
-
-                        %not p(f(1),f(1)). %q(f(1)),q(1), regola si semplifica
-q(f(1,f(1)):-.                  %q(f(1)),q(f(1)), not p(f(1),f(f(1))).
-
-
-
-
 
 
 %%%%%%%%%%%%%%%%%%
@@ -164,3 +138,36 @@ scuolaUsata(S):-assegno(_,P),hairStylist(P,S).
 totalTime(P,T):-#sum{K:assegno(K,P),programmer(A,K)} = T, hairStylist(P,_).
 :~ #max{T:totalTime(P,T)} = M. [M@3]
 %W3
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%
+%   ESERCIZIO 3  %
+%%%%%%%%%%%%%%%%%%
+
+p(f(X),f(X)) :- p(X,f(X)).
+p(1,f(1)). 
+
+p(f(1),f(1)).                %:- p(1,f(1)).
+%se vado a sostituire sopra non matcherà perché non posso usare X in p(X,f(X)) perché questa istanza ha f(X) uguale. minuto 55
+
+
+AS:     p(1,f(1)). + {p(f(1),f(1))} 
+
+
+
+%seconda parte
+
+q(f(X,Y)):- q(f(X)), q(Y), not p(f(X),f(Y)).
+p(f(X),f(X)) :- p(X,f(X)).
+q(1). q(f(1)).
+p(1,f(1)). 
+
+
+p(f(1),f(1)).
+q(f(1,f(1))):- not p(f(1),f(f(1))).
+q(f(1,f(1,f(1)))):- q(f(1)), q(f(1,f(1))), not p(f(1),f(f(1,f(1)))).
+q(f(1,f(1,f(1,f(1))))):- q(f(1)), q(f(1,f(1,f(1)))), not p(f(1),f(f(1,f(1,f(1))))).
+%infinito

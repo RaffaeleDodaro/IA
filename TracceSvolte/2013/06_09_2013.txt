@@ -1,0 +1,49 @@
+
+tira(W) | molla(W) :-amanti(_,W).
+amanti(U,Z)  :-tira(U), tira(Z), not molla(U).
+tira(W) :-molla(X), amanti(W,X), W = X -1.
+tira(4).
+amanti(4,5).
+
+tira(5) | molla(5).		% :-amanti(4,5)
+amanti(4,4).	% tira(4), tira(4) ,  :- not molla(4)
+amanti(5,5)  :-tira(5), not molla(5).
+amanti(5,4)  :-tira(5), not molla(5).	% tira(4),
+tira(5) | molla(5) :-amanti(5,5).
+
+tira(4). amanti(4,5). amanti(4,4). molla(5).
+tira(4). amanti(4,5). amanti(4,4). tira(5). amanti(5,4). amanti(5,5).
+%non basta il supporto
+
+
+tira(4). amanti(4,5). amanti(4,4). molla(5).	%AS
+tira(5) | molla(5).
+tira(5) | molla(5) :-amanti(5,5).
+
+tira(4). amanti(4,5). amanti(4,4). tira(5). amanti(5,4). amanti(5,5).	%AS
+tira(5) | molla(5).
+amanti(5,5)  :-tira(5).
+amanti(5,4)  :-tira(5).
+tira(5) | molla(5) :-amanti(5,5).
+
+
+
+
+
+
+%%%% punto b
+tira(4). amanti(4,5). amanti(4,4). tira(5). amanti(5,4). amanti(5,5).	[9@5][9@4]
+:~ amanti(4,5). [ 5 @ 4 ]
+:~ amanti(4,4). [ 4 @ 4 ]
+:~ amanti(5,4). [ 4 @ 5 ]
+:~ amanti(5,5). [ 5 @ 5 ]
+
+
+tira(4). amanti(4,5). amanti(4,4). molla(5).	[9@4]
+:~ amanti(4,5). [ 5 @ 4 ]
+:~ amanti(4,4). [ 4 @ 4 ]
+
+
+%punto c
+:-#sum { X : amanti(X,_) } > 8.
+tira(4). amanti(4,5). amanti(4,4). molla(5).
