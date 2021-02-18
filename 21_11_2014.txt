@@ -1,0 +1,109 @@
+nessuno(1,4).   
+nessuno(2,3).
+tutti(1,5).     
+tutti(2,2).
+
+alcuni(X) :- tanti(Y), pochi(X), not nessuno(X,Y).
+tanti(Y) | alcuni(X) | pochi(X) :- tutti(X,Y), not alcuni(Y).
+
+
+tanti(5) | alcuni(1) | pochi(1) :- not alcuni(5).           %tutti(1,5), 
+tanti(2) | alcuni(2) | pochi(2) :- not alcuni(2).               % :- tutti(2,2), 
+
+
+
+alcuni(5) :- tanti(5), pochi(1).                                %, not nessuno(5,2)
+alcuni(2) :- tanti(5), pochi(2).                             %, not nessuno(2,5).
+
+alcuni(2) :- tanti(2), pochi(2).                            %, not nessuno(2,1)
+alcuni(1) :- tanti(2), pochi(1).                        % , not nessuno(1,2)
+
+                                                                        tanti(2) *
+
+                                                                        alcuni(2) *
+
+                                                                        pochi(2),alcuni(2) NON MIN 
+
+                                                                        alcuni(2) *
+
+                                                        tanti(5)
+
+
+
+                                                                        tanti(2) *
+
+                                                                        alcuni(2) *
+
+                                                                        pochi(2) *
+
+                                                                        alcuni(2) *
+
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2).     alcuni(1)
+                                                                        tanti(2), alcuni(1) NON MIN
+
+                                                                        alcuni(2) *
+
+                                                                        pochi(2) *
+
+                                                                        alcuni(2) *
+                                                        pochi(1)
+
+
+                                                                        tanti(2) *
+
+                                                                        alcuni(2)*
+
+                                                                        pochi(2)*
+
+                                                                        alcuni(2)*
+                                                        alcuni(5)                       NON SUPPORTATO
+
+%NON CICLICO, MI BASTA IL SUPPORTO
+nessuno(1,4).   
+nessuno(2,3).
+tutti(1,5).     
+tutti(2,2).
+
+tanti(5) | alcuni(1) | pochi(1) :- not alcuni(5).
+tanti(2) | alcuni(2) | pochi(2) :- not alcuni(2).
+
+alcuni(5) :- tanti(5), pochi(1).
+alcuni(2) :- tanti(5), pochi(2).
+
+alcuni(2) :- tanti(2), pochi(2).
+alcuni(1) :- tanti(2), pochi(1).    
+
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). tanti(5). tanti(2). %AS
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). alcuni(1).  tanti(2). %AS
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). alcuni(1).  pochi(2) %AS
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). pochi(1).  pochi(2) %AS
+
+
+
+:-#max{X:tanti(X)}>1, #min{Y:alcuni(Y)}<2.
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). tanti(5). tanti(2). %AS
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). alcuni(1).  pochi(2) %AS
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). pochi(1).  pochi(2) %AS
+
+
+
+:~ tanti(X). [X:1] 
+:~ pochi(X). [2:X]
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). tanti(5). tanti(2).    % BEST
+:~ tanti(X). [X:1] 
+:~ pochi(X). [2:X]
+              [7:1]
+                
+
+
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). alcuni(1).  pochi(2)
+:~ tanti(X). [X:1] 
+:~ pochi(X). [2:X]
+                [2:2]
+
+
+nessuno(1,4). nessuno(2,3). tutti(1,5). tutti(2,2). pochi(1).  pochi(2)
+:~ tanti(X). [X:1] 
+:~ pochi(X). [2:X]
+                [2:1]
+                [2:2]
